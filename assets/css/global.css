@@ -93,9 +93,8 @@ pre, kbd {
   padding: 1em;
   margin: 0;
   border-radius: 4px;
-  border: 1px solid;
   border-color: var(--color-border);
-  background-color: white;
+  background-color: #0a0e21;
 }
 
 pre code {
@@ -104,7 +103,8 @@ pre code {
 
 pre > .hljs {
   color: var(--color-subtle);
-  background-color: white;
+  background-color: #0b0c21;
+  border: 1px solid #52bef4;
 }
 
 kbd {
@@ -219,7 +219,7 @@ kbd {
           transform: translateX(50%);
 }
 pre{
-  background-color: #EEEEEE;
+  background-color: #0e1231;
   font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
   margin-bottom: 10px;
   max-height: 600px;

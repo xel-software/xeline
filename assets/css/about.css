@@ -13,7 +13,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0;
-  background-color: hsl(0,0%,98%);
+  background-color: #0e1231;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
@@ -65,7 +65,7 @@
 }
 
 .about .play-along h2 {
-  color: hsl(222, 53%, 50%);
+  color: #52bef4;
 }
 
 .about-button {
