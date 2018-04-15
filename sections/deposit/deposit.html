@@ -1,0 +1,29 @@
+<template class="task-template">
+  <section id="deposit-section" class="section js-section u-category-media">
+      <header class="section-header">
+          <div class="section-wrapper">
+            <h1>
+              <svg class="section-icon"><use xlink:href="assets/img/icons.svg#icon-media"></use></svg>
+              Deposit Coins to Your Xeline Address
+            </h1>
+            <p>Before you can start interacting with the XEL blockchain, you initially need a few coins in order to cover the transaction fees. Below, you can see your XEL address associated with the private key that you should have backed up in a safe place. Just send some coins to it, and you should be good to go. If you want to learn more about transaction fees, click <a href=# id='btn-fees-section' data-section="help-fees">here</a>.</p>
+          </div>
+        </header>
+    
+    <div class="demo">
+      <div class="demo-wrapper">
+        <div class="centered">
+          <img id="img-qr">
+        </div>
+        <div class="blackdiv centered">
+            <div>Account ID: <span id="acc_id"></span> <a href="#" id="copy-to-id">(copy to clipboard)</a></div><div>Account Address: <span id="acc_rs"></span> <a href="#" id="copy-to-rs">(copy to clipboard)</a></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      require('./assets/depositscripts.js');
+    </script>
+
+  </section>
+</template>

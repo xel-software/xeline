@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
+
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/nativize.css">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/about.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/section.css">
+  <link rel="stylesheet" href="assets/css/demo.css">
+  <link rel="stylesheet" href="assets/css/github.css">
+  <link rel="stylesheet" href="assets/css/xel.css">
+
+  <link rel="import" href="sections/about.html">
+  <link rel="import" href="sections/deposit/deposit.html">
+  <link rel="import" href="sections/tasks/tasks.html">
+  <link rel="import" href="sections/withdraw/withdraw.html">
+  <link rel="import" href="sections/faucet/faucet.html">
+  <link rel="import" href="sections/help/help.html">
+  <title>Xeline - Your Gateway to the XEL Network</title>
+</head>
+<body>
+
+  <nav class="nav js-nav">
+    <header class="nav-header">
+      <img class="nav-header-icon" src="assets/img/minibanner@2x.png">
+    </header>
+    <header class="nav-balance">
+      <p class"smaller">Your XEL Balance</p>
+      <h1 class="resize"><span id="balance">N/A</span></h1>
+      <div id="balanceuc" class="centered floater">Unconfirmed Balance: <span id="balanceu">0.000000</span></div>
+      <p class="final"><button id='btn-deposit-section' data-section="deposit">Deposit</button><button id='btn-withdraw-section' data-section="withdraw">Withdraw</button><button id='btn-faucet-section' data-section="faucet">Faucet</button><button id='btn-about-modal' data-modal="about"><div data-modal="about"><svg viewBox="0 0 60 32.8"><defs><style>.cls-1{fill:#585858;}</style></defs><title>key</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="_Group_" data-name="&lt;Group&gt;"><path id="_Compound_Path_" data-name="&lt;Compound Path&gt;" class="cls-1" d="M31.8,10.9a16.4,16.4,0,1,0,0,11H43.7V32.8H54.6V21.9H60v-11Zm-15.4,11a5.48,5.48,0,0,1-5.5-5.5,5.5,5.5,0,0,1,11,0A5.48,5.48,0,0,1,16.4,21.9Z"/></g></g></g></svg></button></p>
+    </header>
+    <header class="nav-network">
+        <div class="connected" id="statusind"></div> <span id="nodetext">Node: <a href=#>127.0.0.1</a> (Testnet)</span><div class="pullright"><i class="fa fa-share-alt smallicon"></i> <span>Blocks: <a href=#><span id="blocks">242444</span></a></span></div>
+      </header>
+      <header class="nav-computation">
+          <div>
+              <div class="chart-container">
+                <canvas id="hashchart" width="200" height="130"></canvas>
+              </div>
+            </div>
+            <p class="breaker smaller">Network Power in MIPS: <b><span id="currentpower">0</span></b> (<a href=# id='btn-flops-section' data-section="help-flops">learn</a>)</p>
+        </header>
+        <header class="nav-network">
+            <div class="disconnected" id="statusind"></div> <span  id="minertext">Miner is Offline</span><div class="pullright"><i class="fa fa-chart-bar smallicon"></i> <span>Speed: <span id="blocks">0 e/s</span> (<a href=# id=infominer data-section="help-miner">learn</a>)</span></div>
+          </header>
+          <header class="nav-tasks">
+            <table class="pulllefttext">
+              
+                <tr> <td><i class="fa fa-circle-notch"></i> <b>Total Open Tasks</b></td><td><span id="totalOpen">0</span> Tasks</td></tr>
+                <tr><td><i class="fa fa-check-circle"></i> <b>Total Closed Tasks</b></td><td><span id="totalClosed">0</span> Tasks</td></tr>
+                <tr><td><i class="fa fa-circle-notch"></i> <b>Your Open Tasks</b></td><td><a id="mytasks1" data-section="mytasks" class="noclass" href=#><span id="myOpen">0</span> Tasks</a></td></tr>
+                <tr><td><i class="fa fa-check-circle"></i> <b>Your Closed Tasks</b></td><td><a id="mytasks2" data-section="mytasks" class="noclass" href=#><span id="myClosed">0</span> Tasks</a></td></tr>
+            </table>
+            </header>
+            <header class="nav-network">
+                <i class="fa fa-bell smallicon"></i> <span>XEL to be earned: <span id="grabs">149944.99 XEL</span></span><div class="pullright"><a href=# id="btnnewjob"><span id="newjob" data-section="newtask" >new task</span></a></div>
+            </header>
+
+    <footer class="nav-footer">
+      <!--<button type="button" id="button-about" data-modal="about" class="nav-footer-button">About</button>-->
+      <a class="nav-footer-logo" href="https://github.com/xel-software/xeline" aria-label="Homepage">
+        <p>
+          <div class="code"></div>
+          with
+          <div class="heart"></div>
+          on Github
+        </p>
+      </a>
+    </footer>
+  </nav>
+
+  <main class="content js-content"></main>
+  <script>
+    require('./assets/status.js')
+    require('./assets/imports')
+    require('./assets/ex-links')
+    require('./assets/nav')
+    require('./assets/demo-btns')
+    require('./assets/code-blocks')
+    require('./assets/normalize-shortcuts')
+  </script>
+</body>
+</html>

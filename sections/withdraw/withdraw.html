@@ -1,0 +1,51 @@
+<template class="task-template">
+  <section id="withdraw-section" class="section js-section u-category-media">
+      <header class="section-header">
+          <div class="section-wrapper">
+            <h1>
+              <svg class="section-icon"><use xlink:href="assets/img/icons.svg#icon-media"></use></svg>
+              Withdraw Coins From Your Xeline Address
+            </h1>
+            <p>Please note that the coins in your Xeline address are in your possesion at all times: they are not managed by a third party. If you wish to move your coins into a different wallet, you can use the withdrawal function below. Please make sure that all the details you have enteres are correct. Once coins are sent, there is no way to recover them in case you entered either a wrong amoung or a wrong recipient address. Also not, this transaction will cost 0.1 XEL in fees.</p>
+          </div>
+        </header>
+    
+    <div class="demo">
+      <div class="demo-wrapper">
+        <div class="blackdiv centered">
+               
+                <form>
+                        <div class="row">
+                          <h4>Receipient Address (Reed Solomon)</h4>
+                          <div class="input-group input-group-icon">
+                            <input type="text" id="adr" placeholder="XEL-..."/>
+                            <div class="input-icon"><i class="fa fa-user"></i></div>
+                          </div>
+                          <div class="input-group input-group-icon">
+                            <input type="text" id="amt" placeholder="Amount to Send"/>
+                            <div class="input-icon"><i class="fa fa-credit-card"></i></div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <h4>Terms and Conditions</h4>
+                          <div class="input-group">
+                            <input type="checkbox" class='lameshort' id="terms"/>
+                            <label for="terms">I testify, that the above information is correct and that I am sending my coins to an address that I have control of.</label>
+                          </div>
+                        </div>
+                        <div class="gap-high"><div class="rainbow-button-wrapper">
+                                <button id="wd_btn">Withdraw</button>
+                        </div></div>
+                        <p class="greyish centered" id="txtwt"></p>
+                      </form>
+       
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      require('./assets/withdrawscripts.js');
+    </script>
+
+  </section>
+</template>

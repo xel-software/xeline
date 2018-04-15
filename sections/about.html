@@ -1,0 +1,30 @@
+<template class="task-template">
+  <div id="about-modal" class="about modal">
+    <div class="about-wrapper">
+      <header class="about-header">
+        <img class="about-logo" src="assets/img/about.png" srcset="assets/img/about.png 1x, assets/img/about@2x.png 2x" alt="Electron API Demos">
+      </header>
+      <main class="about-sections">
+        <section class="about-section play-along">
+          <h2>Hi, Mate!</h2>
+            <p>Welcome to the wonderful world of decentralized computation. Before you can either contribute your computational power to the network or submit some work yourself, you should backup the following mnemonic phrase; it belongs to the XEL account we have just created for you! It is essential that you back up this information and keep it in a safe place with nobody else than you having access to it. It (and only it) will allow you to recover your account at any time. By clicking <i>Get Started</i> you declare that you have backed up this phrase.</p>
+<pre><code class="language-bash wrapcode" id="mnemonic"></code>
+</code></pre>
+        </section>
+        <section class="about-section about-code">
+          <h2>Use Xeline at Your Own Risk</h2>
+            <p>Xeline is an experimental software utiliy, may contain bugs or other issues, and has to be used at your own risk. In no event shall anyone involved in the development of Xeline be liable or responsible for any direct, indirect, general, special, punitive, exemplary, or consequential damages, claims, losses, injuries, costs and other expenses (including, without limitation, attorneys’ fees or the costs of any claim or suit) directly or indirectly arising out of or related to the usage of this software. By clicking <i>Get Started</i> you declare to accept this.</p>
+        </section>
+        <footer class="about-section footer">
+          <div class="rainbow-button-wrapper">
+            <button id="get-started" class="about-button modal-hide">Get Started</button>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+</template>
+<script type="text/javascript">
+  require('./assets/settingsholder.js');
+  require('./assets/about.js');
+</script>

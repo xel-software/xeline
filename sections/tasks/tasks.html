@@ -1,0 +1,101 @@
+<template class="task-template">
+  <section id="mytasks-section" class="section js-section u-category-media">
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h1>
+          <i class="fa fa-info-circle"></i>
+                    An Overview of Your Tasks
+                  
+        </h1>
+        <p>Here, you will be presented an overview of all your currently open tasks (along with their current progress) as well as your closed tasks. You can cancel live tasks by clicking the "Cancel" button. Please note, that a cancellation costs 0,1 XEL fees. If you have configured callbacks (code scripts that automatically analyze your work results), they will appear below after a task has finished (not timed out or cancelled).</p>
+      </div>
+    </header>
+    <table id="example" class="mdl-data-table" style="width:100%">
+      <thead>
+        <tr>
+          <th style="padding-left: 5px; width: 24px"></th>
+          <th>Title</th>
+          <th>POWs</th>
+          <th>Iterations</th>
+          <th>Bounties</th>
+          <th>Ends in</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="taskbody">
+      </tbody>
+    </table>
+  </section>
+  <section id="newtask-section" class="section js-section u-category-media">
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h1>
+          <i class="fa fa-info-circle"></i>
+                    Create a New Task
+                  
+        </h1>
+        <p>Creating a new task is very straight forward. All you have to do it to drag your *.epl file onto the field below. Please make sure that you include all "commented-metadata" as described in the ePL programming ebook; this metadata contains information about how much you are willing to pay for bounties and proof-of-work submissions and how many blocks you want your task to be live before it times-out. If your program passes all checks, a button will appear and you will be able to push the task to the network. If you just want to play around a bit to see XEL in action, feel free to select one of the demo tasks from the list below.</p>
+      </div>
+    </header>
+    <p class="centered">
+      <select class="weirdcenter" id="DropList">
+        <option value="">Select one of our demos if you are still learning ...</option>
+      </select>
+    </p>
+    <div class="conteener" role="main">
+      <form id="dragger" novalidate class="box has-advanced-upload">
+        <div class="box__input" id="dragarea">
+          <svg class="box__icon"
+            xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43">
+            <path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"/>
+          </svg>
+          <input type="file" name="files" id="file" class="box__file" data-multiple-caption="{count} files selected" multiple />
+          <label for="file">
+            <strong>Choose a file</strong>
+            <span class="box__dragndrop"> or drag it here</span>.
+          </label>
+        </div>
+      </form>
+    </div>
+    <p class="greyish centered" id="txtwt3"></p>
+  </section>
+
+  <section id="newtask2-section" class="section js-section u-category-media">
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h1>
+          <i class="fa fa-info-circle"></i>
+          Create a New Task (Part 2)
+                  
+        </h1>
+        <p>Congratulations! We have loaded your task and everything is looking good. In the background, we have verified your task's semantic correctness by cross-checking it by the node. The only thing that is left is signing the transaction(s) and broadcasting it/them to the network. Before we do so, please double-check that all the details outlined below are correct and that you agree to pay the required fees. Since transaction fees highly depend on the size of the transaction, the fees may exceed the minimum fee of 0.1 XEL.</p>
+      </div>
+    </header>
+    <div class="conteener" role="main">
+      <form id="dragger2" novalidate class="boxmini has-advanced-upload">
+       <div class="box__input">
+      <span id="x0"></span>
+      <p>
+          <table class="pulllefttext worktable">
+            <tr><td>Iterations:</td><td><span id="x1"></span></td></tr>
+            <tr><td>Bounties per iteration:</td><td><span id="x2"></span></td></tr>
+            <tr><td>Proof-of-work limit:</td><td><span id="x3"></span></td></tr>
+            <tr><td>Payment per proof-of-work:</td><td><span id="x4"> XEL</span></td></tr>
+            <tr><td>Payment per bounty:</td><td><span id="x5"></span> XEL</td></tr>
+            <tr><td>Maximum total cost for job:</td><td><b><span id="x6"></span> XEL</b></td></tr>
+            <tr><td>Fees for broadcast:</td><td><b><span id="x7"></span> XEL</b></td></tr>
+            <tr><td>Callback script:</td><td><span id="x8"></span></td></tr>
+          </table>
+      </p>
+      </div>
+    </form>
+    </div>
+    <div class="gap-high centered" id="wd_btn10x"><div class="rainbow-button-wrapper" >
+                                <button id="wd_btn10">Broadcast</button>
+                        </div></div>
+    <p class="greyish centered" id="txt10"></p>
+  </section>
+</template>
+  <script type="text/javascript">
+        var taskscripts = require('./assets/taskscripts.js');
+      </script>

@@ -1,0 +1,49 @@
+// metadata(title:Find a prime between 10000 and 20000)
+// metadata(pow_limit:1000)
+// metadata(pow_price:0.0001)
+// metadata(bounty_limit:1)
+// metadata(bounty_price:5)
+// metadata(iterations:1)
+// metadata(timeout:250)
+// metadata(callback:find_prime.js)
+array_uint 1000;
+function main { verify();} 
+function primetest {
+    u[1] = 0;
+    if (u[2] <= 1)  u[1]=0;
+    else if (u[2] <= 3)  u[1]=0;
+    else if (u[2]%2 == 0 || u[2]%3 == 0) u[1]=0;
+    else {
+        u[3]=5; u[1]=1;
+        repeat(u[99],20000,20000){
+            if (u[2]%u[3] == 0 || u[2]%(u[3]+2) == 0){
+                u[1]=0;
+                break;
+            }
+            if(u[3]*u[3] > u[2]) break;
+            u[3]+=6;
+        }
+    }
+}
+
+function verify {
+
+    // make prime test
+    u[2] = m[0];
+    u[1]=0;
+    if(m[0]>10000 && m[0]<20000)
+        primetest();
+
+    // Bounty Is Rewarded m[0] is larger than 3294967295 and prime
+	verify_bty ((m[0]>10000 && m[0]<20000) && (u[1]==1));
+
+    // some randomness for POW function
+    u[57] = m[1];
+    u[56] = m[2];
+    u[55] = m[3];
+    u[54] = m[4];
+
+	
+	// POW Is Rewarded When The MD5 Hash Of h7, h6, h5 & h4 Is Less Than Target
+	verify_pow (u[57], u[56], u[55], u[54]);
+}

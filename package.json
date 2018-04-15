@@ -1,0 +1,69 @@
+{
+  "name": "Xeline",
+  "productName": "Xeline",
+  "version": "1.0.1",
+  "description": "Xeline GUI Client",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --debug",
+    "package": "npm-run-all package:*",
+    "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Xeline Development Team' --extend-info=assets/mac/info.plist",
+    "package:win": "electron-packager . --version-string.ProductName=\"Xeline\" --overwrite --platform=win32 --arch=ia32 --out=out --icon=assets/app-icon/win/app.ico",
+    "package:linux": "electron-packager . --overwrite --platform=linux --arch=x64 --out=out",
+    "package:sign-exe": "signcode './out/Xeline-win32-ia32/Xeline.exe' --cert ../xeline-secret/certificate_win/certificate.p12 --prompt --name 'Xeline' --url 'http://xel.org'",
+    "package:installer": "node ./script/installer.js",
+    "package:sign-installer": "signcode './out/windows-installer/XelineSetup.exe' --cert ../xeline-secret/certificate_win/certificate.p12 --prompt --name 'Xeline' --url 'http://xel.org'",
+    "release": "node ./script/release.js",
+    "prepack": "check-for-leaks",
+    "prepush": "check-for-leaks"
+  },
+  "repository": "https://github.com/xel-software/xeline",
+  "keywords": [
+    "XEL",
+    "Computation",
+    "Blockchain",
+    "Elastic"
+  ],
+  "author": "Opensource Community",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-as-promised": "^6.0.0",
+    "check-for-leaks": "^1.2.0",
+    "devtron": "^1.3.0",
+    "electron": "~1.8.2",
+    "electron-packager": "^8.6.0",
+    "electron-winstaller": "^2.2.0",
+    "husky": "^0.14.3",
+    "mocha": "^3.1.0",
+    "npm-run-all": "^4.0.2",
+    "request": "^2.70.0",
+    "rimraf": "^2.5.2",
+    "signcode": "^0.5.0",
+    "spectron": "~3.6.0",
+    "standard": "^8.2.0"
+  },
+  "dependencies": {
+    "node-time-ago": "^1.0.0",
+    "async": "^2.6.0",
+    "chart-stream": "^1.1.1",
+    "big-integer": "^1.6.27",
+    "nxtjs": "^0.1.1",
+    "long": "^4.0.0",
+    "sha256": "^0.2.0",
+    "bitcore-mnemonic": "^1.1.1",
+    "bootstrap": "^3.3.7",
+    "qr-image": "^3.1.0",
+    "electron-settings": "^3.0.7",
+    "electron-shortcut-normalizer": "^1.0.0",
+    "glob": "^7.1.0",
+    "highlight.js": "^9.3.0"
+  },
+  "standard": {
+    "env": {
+      "mocha": true
+    }
+  }
+}
