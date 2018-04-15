@@ -200,7 +200,7 @@ function GetRow(work) {
 
     if(closed && cb && (op["output"]=="@@@@@@" || op["output"]=="An error occurred when evaluating the callback script. We will try again later, fix the script please!")){
         if(cbs=="") cbs="default.js";
-        var ppp = path.join(app.getPath('userData'),"..", 'callbacks', cbs);
+        var ppp = path.join(app.getPath('userData'), 'callbacks', cbs);
         if (!fs.existsSync(ppp)){
             ppp=path.join(__dirname,"..","callbacks", cbs);
         }
@@ -561,11 +561,29 @@ function initme() {
 }
 myEmitter.pubsub.on('show-newtask2-section', (event, arg) => {
 
+
+    var fnd = false;
+    if(toBeHead["callback"]=="")
+        wrn = "Your task does not have a callback script associated.<br>Your results will not be analyzed automatically.";
+    else if(toBeHead["callback"]=="default.js")
+        wrn = "This task will use a dummy callback, i.e., your results won't be analyzed.";
+    else {
+        var ppp = path.join(app.getPath('userData'), 'callbacks', toBeHead["callback"]);
+        var wrn = "Warning: The callback script which should be at<br>" + ppp + "<br>is not present. Make sure to install it, otherwise your results won't get analyzed.";
+
+        if (!fs.existsSync(ppp)){
+            var ppp2=path.join(__dirname,"..","callbacks", toBeHead["callback"]);
+            if (!fs.existsSync(ppp2)) fnd = false;
+            else fnd=true;
+        } else fnd = true;
+    }
+    console.log("Found callback: " + ppp);
     if (init == 0) {
         init = 1;
         initme();
     };
     txt10.innerHTML = "";
+    var te = document.getElementById("taskerror");
     var x0 = document.getElementById("x0");
     var x1 = document.getElementById("x1");
     var x2 = document.getElementById("x2");
@@ -575,6 +593,14 @@ myEmitter.pubsub.on('show-newtask2-section', (event, arg) => {
     var x6 = document.getElementById("x6");
     var x7 = document.getElementById("x7");
     var x8 = document.getElementById("x8");
+
+    if(fnd){
+        te.style.display="none";
+        te.innerHTML="";
+    }else{
+        te.style.display="block";
+        te.innerHTML=wrn;
+    }
 
     x0.innerHTML = toBeHead["title"];
     x1.innerHTML = toBeHead["iterations"];

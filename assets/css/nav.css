@@ -588,3 +588,8 @@ canvas {
   font-family: Lucida Console, Lucida Sans Typewriter, monaco, Bitstream Vera Sans Mono, monospace;
   padding-bottom: 5px;
 }
+
+#taskerror {
+  color: #ff3a3a;
+  font-weight: 500;
+}
