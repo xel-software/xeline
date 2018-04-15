@@ -31,7 +31,7 @@ function verify {
     // make prime test
     u[2] = m[0];
     u[1]=0;
-    if(m[0]>10000 && m[0]<20000)
+    if(m[0]>10000 && m[0]<1)
         primetest();
 
     // Bounty Is Rewarded m[0] is larger than 3294967295 and prime

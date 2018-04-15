@@ -2,6 +2,72 @@
 const myEmitter = require('./pubsub.js');
 const reql = require("./requestloop.js");
 
+const dgram = require('dgram');
+const server = dgram.createSocket('udp4');
+var lastBeacon = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+
+
+var evals = 0;
+var pow = 0;
+var bty = 0;
+
+server.on('error', (err) => {
+  console.log(`server error:\n${err.stack}`);
+  server.close();
+});
+function formatEvals(bytes,decimals) {
+    if(bytes == 0) return '0 ';
+    var k = 1000,
+        dm = decimals || 2,
+        sizes = [' ', ' k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) +  sizes[i];
+ }
+server.on('message', (msg, rinfo) => {
+  try{
+    var arr = msg.toString().split("/").map(val => Number(val));
+      if(arr.length>=3){
+          evals=arr[0];
+          pow=arr[1];
+          bty=arr[2];
+          lastBeacon = new Date();
+      }
+  }catch(e){
+  }
+});
+
+server.on('listening', () => {
+  const address = server.address();
+  console.log(`server listening ${address.address}:${address.port}`);
+});
+
+function checkMiner(){
+    var dif = (new Date()).getTime() - lastBeacon.getTime();
+    let m1 = document.getElementById('minerstatus');
+    let m2 = document.getElementById('minertext');
+    let m3 = document.getElementById('minertext2');
+    var Seconds_from_T1_to_T2 = dif / 1000;
+    var Seconds_Between_Dates = Math.abs(Seconds_from_T1_to_T2);
+    if ( Seconds_Between_Dates > 3 ) {
+        m1.classList.remove("connected");
+        m1.classList.remove("disconnected");
+        m1.classList.add("disconnected");
+        m2.innerHTML="Not Mining";
+        m3.innerHTML="0 eval / 0 pow / 0 bty";
+    }else{
+        m1.classList.remove("connected");
+        m1.classList.remove("disconnected");
+        m1.classList.add("connected");
+        m2.innerHTML="Mining";
+        m3.innerHTML=formatEvals(evals,0) + "eval / " + formatEvals(pow,0) + "pow / " + formatEvals(bty,0) + "bty";
+    }
+}
+setInterval(function() {
+    checkMiner();
+  }, 1000);
+
+server.bind(41234, "127.0.0.1");
+
 
   var ctx = document.getElementById("hashchart").getContext('2d');
   var myChart = new Chart(ctx, {
@@ -134,4 +200,5 @@ myEmitter.pubsub.on('status', (event, arg) => {
     
   })
   reql.init();
+  checkMiner();
 
