@@ -256,9 +256,9 @@ function GetRow(work) {
         element += '<td>' + (work['max_closing_height'] - work['work_at_height']) + ' Blks</td>';
     else {
         if (work["timedout"] == true) {
-            element += '<td colspan=2>timed out ' + timeAgo(work['closing_timestamp']) + '</td>';
+            element += '<td colspan=2>timed out ' + timeAgo(work['closing_timestamp']*1000+1385294400000) + '</td>';
         } else if (work["cancelled"] == true) {
-            element += '<td colspan=2>cancelled ' + timeAgo(work['closing_timestamp']) + '</td>';
+            element += '<td colspan=2>cancelled ' + timeAgo(work['closing_timestamp']*1000+1385294400000) + '</td>';
         } else element += '<td conspan=2>finished ' + timeAgo(work['closing_timestamp']*1000+1385294400000) + '</td>';
     }
 
