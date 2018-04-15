@@ -41,7 +41,6 @@ myEmitter.pubsub.on('works', (event, arg) => {
 
 myEmitter.pubsub.on('show-newtask-section', (event, arg) => {
 
-    alert(workreader.demos.length);
     document.getElementById('DropList').onchange = function() {
         var t = document.getElementById('DropList');
         if (t.options[t.selectedIndex].value != "") workOpen(t.options[t.selectedIndex].value);
