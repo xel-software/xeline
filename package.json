@@ -55,7 +55,7 @@
     "sha256": "^0.2.0",
     "bitcore-mnemonic": "^1.1.1",
     "bootstrap": "^3.3.7",
-    "qr-image": "^3.1.0",
+    "qrcode": "^1.2.0",
     "electron-settings": "^3.0.7",
     "electron-shortcut-normalizer": "^1.0.0",
     "glob": "^7.1.0",

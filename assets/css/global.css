@@ -21,7 +21,7 @@ html {
   line-height: 1.5;
   overflow: hidden; /* Prevents rubber-band scrolling of the whole "page" */
   color: var(--color);
-  background-color: #fff; /* To cover OSes with no default background color */
+  background-color: #0d112c; /* To cover OSes with no default background color */
 }
 
 body {
@@ -186,7 +186,7 @@ kbd {
 .code::before, .code::after {
   height: .375rem;
   width: .375rem;
-  background-color: #fafafa;
+  background-color: #0b0c21;
 }
 .code::before {
   top: -0.16rem;

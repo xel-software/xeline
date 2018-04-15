@@ -2,13 +2,13 @@
 /* Custom Properties */
 
 :root {
-  --color:          hsl(0,0%,22%);
-  --color-subtle:   hsl(0,0%,44%);
-  --color-strong:   hsl(0,0%,11%);
-  --color-link:     hsl(0,0%,22%);
+  --color:          #fff;
+  --color-subtle:   #6253f2;
+  --color-strong:   #52bef4;
+  --color-link:     #52bef4;
 
-  --color-border:   hsl(0,0%,88%);
-  --color-bg:       hsl(0,0%,96%);
+  --color-border:   #0b0c21;
+  --color-bg:       #0b0c21;
 
   --color-accent:   black; /* Fallback */
 }

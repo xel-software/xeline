@@ -20,8 +20,8 @@ select {
   width: 100%;
   padding: 1em;
   line-height: 1.4;
-  background-color: #f9f9f9;
-  border: 1px solid #e5e5e5;
+  background-color: #0b0c21;;
+  border: 1px solid #2c256f;
   border-radius: 3px;
   -webkit-transition: 0.35s ease-in-out;
   -moz-transition: 0.35s ease-in-out;
@@ -204,4 +204,8 @@ select option {
   -moz-border-radius-bottomleft: 3px;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
+}
+
+#balance {
+  color: #bfe3ff;
 }
