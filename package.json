@@ -1,7 +1,7 @@
 {
   "name": "Xeline",
   "productName": "Xeline",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Xeline GUI Client",
   "private": true,
   "main": "main.js",
