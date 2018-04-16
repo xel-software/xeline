@@ -135,9 +135,9 @@ wd_btn.addEventListener('click', (e) => {
     });
   
   }).on("error", (err) => {
-      text.innerHTML="An error occured: the node could not be reached";
+      textwd.innerHTML="An error occured: the node could not be reached";
       //faucet_btn.style.opacity=1;
-      textwd.disabled = false;
+      wd_btn.disabled = false;
       adr.disabled = false;
       amt.disabled = false;
       terms.disabled = false;

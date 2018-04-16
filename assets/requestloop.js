@@ -3,17 +3,19 @@ const https = require('http');
 const settings = require('./settingsholder.js')
 const myEmitter = require('./pubsub.js');
 const BigInteger = require("big-integer");
+
 var loadbalancer = Math.floor(Math.random() * 5) + 1;
-const ip = "balance-" + loadbalancer + ".xel.org";
+var ip = '';
 const fip = "faucet.xel.org";
 
 const testnet = true;
 const port = ((testnet)?16876:17876);
 
 var connected = false;
-const rpcurl = 'http://' + ip + ":" + ((testnet)?"16876":"17876") + "/nxt";
-const fauceturl = 'http://' + fip + ":" + ((testnet)?"16876":"17876") + "/nxt";
+var rpcurl = ''
+var fauceturl = 'http://' + fip + ":" + ((testnet)?"16876":"17876") + "/nxt";
 
+refresh();
 var blocks = 0;
 var balance = "0";
 var balanceu = "0";
@@ -29,7 +31,21 @@ var lastReceivedBlock = 0;
 
 // Longpoller
 
-
+function refresh(){
+    const t = settings.getNode();
+    if(t==""){
+        ip = "balance-" + loadbalancer + ".xel.org";
+    }else{
+        ip = "127.0.0.1";
+    }
+    rpcurl = 'http://' + ip + ":" + ((testnet)?"16876":"17876") + "/nxt";
+    let nt = document.getElementById('nodetext');
+    let st = document.getElementById('statusind');
+    st.classList.remove("connected");
+    st.classList.remove("disconnected");
+    st.classList.add("disconnected");
+    nt.innerHTML="Node: <a href=# data-section=\"nodes\">" + ip + "</a> (" + ((testnet)?"Test":"Main") +")</span>";
+}
 
 function amountconvert (amount) {
     if(amount == undefined) amount = "0";
@@ -77,7 +93,8 @@ function pullin(){
 }
 
 function pullin_light(){
-    https.get(rpcurl + "?requestType=getLastBlockId", (resp) => {
+    const st = settings.getKey();
+    https.get(rpcurl + "?requestType=getLastBlockId&account=" + st["id"], (resp) => {
           let data = '';
     
           resp.on('data', (chunk) => {
@@ -92,6 +109,10 @@ function pullin_light(){
                 }else
                 {
                     connected = false;
+                }
+
+                if ("unconfirmedBalanceNQT" in resp){
+                    balanceu = resp["unconfirmedBalanceNQT"];
                 }
                 pushinfo_light();
           });
@@ -317,7 +338,7 @@ function pushinfo(){
 }
 
 function pushinfo_light(){
-    myEmitter.pubsub.emit('status_light', [connected]);
+    myEmitter.pubsub.emit('status_light', [connected, balanceu]);
 }
 
 module.exports.rpcurl = rpcurl;
@@ -329,5 +350,6 @@ module.exports.amountformat = amountformat;
 module.exports.formatNQT = formatNQT;
 module.exports.formatNXT = formatNXT;
 module.exports.fauceturl=fauceturl;
+module.exports.refresh=refresh;
 
 pullin();

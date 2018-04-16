@@ -375,12 +375,13 @@ function workOpen(f) {
     const st = settings.getKey();
     var txtwt3 = document.getElementById('txtwt3');
     metadata = workreader.readMetadata(f);
-    metadata["finished"] = "";
 
     if (metadata == null) {
         txtwt3.innerHTML = "The work you have tried to open does not have any (or incomplete) metadata";
         setTimeout(Clear, 3000);
     } else {
+        metadata["finished"] = "";
+
         var post_data = querystring.stringify({
             'publicKey': settings.toHexString(st["pub"]),
             'source_code': workreader.readAll(metadata['file']),

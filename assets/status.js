@@ -122,6 +122,7 @@ function removeData(chart) {
 
 myEmitter.pubsub.on('status_light', (event, arg) => {
     let st = document.getElementById('statusind');
+    let balanceuc = document.getElementById('balanceuc');
     if(event[0]==false){
         st.classList.remove("connected");
         st.classList.remove("disconnected");
@@ -131,6 +132,10 @@ myEmitter.pubsub.on('status_light', (event, arg) => {
         st.classList.remove("disconnected");
         st.classList.add("connected");
     }
+
+    let balanceu = document.getElementById('balanceu');
+    balanceu.innerHTML=reql.amountformat(event[1]);
+
 });
 
 myEmitter.pubsub.on('status', (event, arg) => {
@@ -148,10 +153,14 @@ myEmitter.pubsub.on('status', (event, arg) => {
     let vmc = document.getElementById('myClosed');
     let vg = document.getElementById('grabs');
 
-    nt.innerHTML="Node: <a href=#>" + reql.ip + "</a> (" + ((reql.testnet)?"Test":"Main") +")</span>";
+    nt.innerHTML="Node: <a href=# data-section=\"nodes\">" + reql.ip + "</a> (" + ((reql.testnet)?"Test":"Main") +")</span>";
     balance.innerHTML=reql.amountformat(event[4]);
     balanceu.innerHTML=reql.amountformat(event[5]);
-
+    if(balance.innerHTML!=balanceu.innerHTML){
+        balanceuc.style.visibility="visible";
+    }else{
+        balanceuc.style.visibility="hidden";
+    }
 
     vto.innerHTML = event[7];
     vtc.innerHTML  = event[8];

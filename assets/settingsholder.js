@@ -1,5 +1,6 @@
 var Mnemonic = require('bitcore-mnemonic');
 const Store = require('./store.js');
+
 const sha256 = require('sha256');
 const Long = require('long');
 const NRS = require('nxtjs');
@@ -40,6 +41,18 @@ function checkKey(){
   var key = store.get('privateKeyStoreAXWXD');
   return key;
 }
+
+function getNode(){
+  var key = store.get('node');
+  if(key==null)
+    key="";
+  return key;
+}
+
+function setNode(x){
+  store.set('node', x);
+}
+
 function getKey(){
     var key = store.get('privateKeyStoreAXWXD');
     if(key==null){
@@ -81,3 +94,5 @@ module.exports.storeWork = storeWork;
 module.exports.checkKey = checkKey;
 module.exports.checkAbout = checkAbout;
 module.exports.setAbout = setAbout;
+module.exports.setNode = setNode;
+module.exports.getNode = getNode;
