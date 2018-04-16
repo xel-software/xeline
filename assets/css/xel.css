@@ -72,7 +72,7 @@ input[type="radio"] + label i {
 input[type="radio"]:checked + label,
 select:focus,
 select:active {
-  background-color: #d3d3d3;
+  background-color: #0b0c21;
   color: #fff;
   border-color: #5b5b5b;
 }
@@ -96,8 +96,8 @@ select:active {
   outline: 0;
 }
 select option {
-  background-color: #dee8f7;
-  color: #585858;;
+  background-color: #0b0c21;
+  color: #ffffff;;
 }
 .input-group {
   margin-bottom: 1em;
