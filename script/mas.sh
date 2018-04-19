@@ -3,7 +3,7 @@
 set -ex
 
 # App Store does not allow the word "demos" in the app's name
-APP="Electron APIs"
+APP="Xeline"
 
 electron-packager . \
   "$APP" \
@@ -22,8 +22,8 @@ electron-packager . \
 
 APP_PATH="./out/$APP-mas-x64/$APP.app"
 RESULT_PATH="./out/$APP.pkg"
-APP_KEY="3rd Party Mac Developer Application: GitHub (VEKTX9H2N7)"
-INSTALLER_KEY="3rd Party Mac Developer Installer: GitHub (VEKTX9H2N7)"
+APP_KEY="Blockchain Incubator Ltd"
+INSTALLER_KEY="Blockchain Incubator Ltd"
 FRAMEWORKS_PATH="$APP_PATH/Contents/Frameworks"
 CHILD_PLIST="./assets/mac/child.plist"
 PARENT_PLIST="./assets/mac/parent.plist"

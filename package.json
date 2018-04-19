@@ -1,7 +1,7 @@
 {
   "name": "Xeline",
   "productName": "Xeline",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Xeline GUI Client",
   "private": true,
   "main": "main.js",
@@ -9,12 +9,14 @@
     "start": "electron .",
     "dev": "electron . --debug",
     "package": "npm-run-all package:*",
-    "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Xeline Development Team' --extend-info=assets/mac/info.plist",
+    "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign --extend-info=assets/mac/info.plist",
     "package:win": "electron-packager . --version-string.ProductName=\"Xeline\" --overwrite --platform=win32 --arch=ia32 --out=out --icon=assets/app-icon/win/app.ico",
     "package:linux": "electron-packager . --overwrite --platform=linux --arch=x64 --out=out",
-    "package:sign-exe": "signcode './out/Xeline-win32-ia32/Xeline.exe' --cert ../xeline-secret/certificate_win/certificate.p12 --prompt --name 'Xeline' --url 'http://xel.org'",
+    "package:sign-exe": "signcode './out/Xeline-win32-ia32/Xeline.exe' --cert ../../secret/code_signing.p12 --prompt --name 'Xeline' --url 'http://xeline.org'",
     "package:installer": "node ./script/installer.js",
-    "package:sign-installer": "signcode './out/windows-installer/XelineSetup.exe' --cert ../xeline-secret/certificate_win/certificate.p12 --prompt --name 'Xeline' --url 'http://xel.org'",
+    "package:sign-installer": "signcode './out/windows-installer/XelineSetup.exe' --cert ../../secret/code_signing.p12 --prompt --name 'Xeline' --url 'http://xel.org'",
+    "package=disabled:mas": "./script/mas.sh",
+    "windows-store": "node ./script/windows-store.js",
     "release": "node ./script/release.js",
     "prepack": "check-for-leaks",
     "prepush": "check-for-leaks"
@@ -46,20 +48,21 @@
     "standard": "^8.2.0"
   },
   "dependencies": {
-    "node-time-ago": "^1.0.0",
     "async": "^2.6.0",
-    "chart-stream": "^1.1.1",
     "big-integer": "^1.6.27",
-    "nxtjs": "^0.1.1",
-    "long": "^4.0.0",
-    "sha256": "^0.2.0",
     "bitcore-mnemonic": "^1.1.1",
     "bootstrap": "^3.3.7",
-    "qrcode": "^1.2.0",
+    "chart-stream": "^1.1.1",
     "electron-settings": "^3.0.7",
     "electron-shortcut-normalizer": "^1.0.0",
+    "electron-windows-store": "^0.12.0",
     "glob": "^7.1.0",
-    "highlight.js": "^9.3.0"
+    "highlight.js": "^9.3.0",
+    "long": "^4.0.0",
+    "node-time-ago": "^1.0.0",
+    "nxtjs": "^0.1.1",
+    "qrcode": "^1.2.0",
+    "sha256": "^0.2.0"
   },
   "standard": {
     "env": {

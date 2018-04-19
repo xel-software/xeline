@@ -80,12 +80,20 @@ function makeSingleInstance () {
   })
 }
 
+
 // Make sure callback path exists
 var x = path.join(app.getPath('userData'), 'callbacks');
 if (!fs.existsSync(x)){
-  fs.mkdirSync(x);
+  x
+ .split(path.sep)
+ .reduce((currentPath, folder) => {
+   currentPath += folder + path.sep;
+   if (!fs.existsSync(currentPath)){
+     fs.mkdirSync(currentPath);
+   }
+   return currentPath;
+ }, '');
 }
-
 
 
 // Handle Squirrel on Windows startup events
