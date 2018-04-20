@@ -22,8 +22,8 @@ electron-packager . \
 
 APP_PATH="./out/$APP-mas-x64/$APP.app"
 RESULT_PATH="./out/$APP.pkg"
-APP_KEY="Blockchain Incubator Ltd"
-INSTALLER_KEY="Blockchain Incubator Ltd"
+APP_KEY=""
+INSTALLER_KEY=""
 FRAMEWORKS_PATH="$APP_PATH/Contents/Frameworks"
 CHILD_PLIST="./assets/mac/child.plist"
 PARENT_PLIST="./assets/mac/parent.plist"

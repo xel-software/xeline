@@ -135,6 +135,11 @@ myEmitter.pubsub.on('status_light', (event, arg) => {
 
     let balanceu = document.getElementById('balanceu');
     balanceu.innerHTML=reql.amountformat(event[1]);
+    if(balance.innerHTML!=balanceu.innerHTML){
+        balanceuc.style.visibility="visible";
+    }else{
+        balanceuc.style.visibility="hidden";
+    }
 
 });
 

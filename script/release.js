@@ -87,6 +87,9 @@ function zipAssets () {
     }, {
       name: 'XelineSetup.exe',
       path: path.join(outPath, 'windows-installer', 'XelineSetup.exe')
+    },{
+      name: 'Xeline.dmg',
+      path: path.join(outPath, 'Xeline.dmg')
     }, {
       name: `Xeline-${version}-full.nupkg`,
       path: path.join(outPath, 'windows-installer', `Xeline-${version}-full.nupkg`)

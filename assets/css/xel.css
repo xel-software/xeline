@@ -210,3 +210,12 @@ select option {
 #balance {
   color: #bfe3ff;
 }
+
+.topright {
+  position: absolute;
+  bottom: 0;
+  background-color: #d02592;
+  right: 0;
+  padding: 2px;
+  display: none;
+}

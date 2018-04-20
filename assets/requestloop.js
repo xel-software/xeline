@@ -45,6 +45,10 @@ function refresh(){
     st.classList.remove("disconnected");
     st.classList.add("disconnected");
     nt.innerHTML="Node: <a href=# data-section=\"nodes\">" + ip + "</a> (" + ((testnet)?"Test":"Main") +")</span>";
+
+    document.getElementById('topwarning').style.display="none";
+    if(testnet)
+        document.getElementById('topwarning').style.display="block";
 }
 
 function amountconvert (amount) {
