@@ -615,3 +615,4 @@ myEmitter.pubsub.on('show-newtask2-section', (event, arg) => {
 });
 
 module.exports.killwork = killwork;
+module.exports.getContentPost = getContentPost;

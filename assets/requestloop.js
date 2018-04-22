@@ -2,7 +2,11 @@
 const https = require('http');
 const settings = require('./settingsholder.js')
 const myEmitter = require('./pubsub.js');
+const tsk = require('./taskscripts.js');
+
 const BigInteger = require("big-integer");
+const nxt = require('nxtjs');
+const querystring = require('querystring');
 
 var loadbalancer = Math.floor(Math.random() * 5) + 1;
 var ip = '';
@@ -14,6 +18,48 @@ const port = ((testnet)?16876:17876);
 var connected = false;
 var rpcurl = ''
 var fauceturl = 'http://' + fip + ":" + ((testnet)?"16876":"17876") + "/nxt";
+
+var firstFullDone = false;
+
+var createRingBuffer = function(length){
+    /* https://stackoverflow.com/a/4774081 */
+    var pointer = 0, buffer = []; 
+  
+    return {
+      contains : function(element){
+            return buffer.indexOf(element) > -1;
+      },
+      get  : function(key){
+          if (key < 0){
+              return buffer[pointer+key];
+          } else if (key === false){
+              return buffer[pointer - 1];
+          } else{
+              return buffer[key];
+          }
+      },
+      push : function(item){
+        buffer[pointer] = item;
+        pointer = (pointer + 1) % length;
+        return item;
+      },
+      prev : function(){
+          var tmp_pointer = (pointer - 1) % length;
+          if (buffer[tmp_pointer]){
+              pointer = tmp_pointer;
+              return buffer[pointer];
+          }
+      },
+      next : function(){
+          if (buffer[pointer]){
+              pointer = (pointer + 1) % length;
+              return buffer[pointer];
+          }
+      }
+    };
+};
+var ringBuffer = createRingBuffer(200);
+
 
 refresh();
 var blocks = 0;
@@ -28,6 +74,7 @@ var lasttargets = [];
 var works=[];
 var zeros = "00000000";
 var lastReceivedBlock = 0;
+var signing = false;
 
 // Longpoller
 
@@ -126,6 +173,65 @@ function pullin_light(){
         });
 }
 
+function sign_and_pay(unsigned_tx) {
+    const st = settings.getKey();
+    var unsigned = [];
+    var prunables = [];
+    var signed = [];
+
+    if(signing==true) return null;
+    if(firstFullDone==false){
+        firstFullDone = true;
+        return null;
+    }
+    return new Promise(function(resolve, reject) {
+        if(signing==true) return;
+        signing=true;
+        
+        for(var cx in unsigned_tx){
+            var t = unsigned_tx[cx];
+            try{
+                var x = t[0]["unsignedTransactionBytes"];
+                console.log("Signing: " + x)
+                var appd = t[1];
+                if(ringBuffer.contains(x)){} else {
+                    var stx = nxt.signTransactionBytes(x, st["mnemonic"]);
+                    signed.push(stx);
+                    unsigned.push(x);
+                    prunables.push(appd);
+                }
+            } catch (e) {}
+        }
+
+        for (var i = 0; i < signed.length; i++) {
+            var datata = querystring.stringify({
+                'transactionBytes': signed[i],
+                'prunableAttachmentJSON': JSON.stringify(prunables[i])
+            });
+            tsk.getContentPost(datata)
+                .then((html) => {
+                    if(html.indexOf("fullHash")>0){
+                        ringBuffer.push(unsigned[i]);
+                        console.log(html);
+                        if (i == signed.length) {
+                            console.log("Finished payouts");
+                        } else {
+                            console.log("Submitted " + i + " of " + signed.length);
+                        }
+                    }else{
+                        console.log("Failed submitting a payment, we will try (and hope) in the next block: " + err);
+                    }
+                })
+                .catch((err) => {
+                    console.log("Failed submitting a payment on a large scale, we will try (and hope) in the next block: " + err);
+                });
+        }
+        resolve(null);
+
+
+    });
+}
+
 function pullin_full(){
     console.log("Doing a full pull using last known block id " + lastReceivedBlock);
     const st = settings.getKey();
@@ -195,6 +301,12 @@ function pullin_full(){
             }else
             {
             }
+
+            if ("pendingPayouts" in resp && signing==false){
+                var ops = sign_and_pay(resp["pendingPayouts"]);
+                if(ops!=null) ops.then(function (result) { signing = false; });
+            }
+            
 
             pushinfo();
       });
