@@ -197,8 +197,9 @@ function GetRow(work) {
     }
     var notnormal = work["cancelled"] | work["timedout"];
     var closed = work["closed"];
-
-    if(closed && cb && (op["output"]=="@@@@@@" || op["output"]=="An error occurred when evaluating the callback script. We will try again later, fix the script please!")){
+    var cancelled = work["cancelled"];
+    var timedout = work["timedout"];
+    if(closed && cb && !cancelled && !timedout && (op["output"]=="@@@@@@" || op["output"]=="An error occurred when evaluating the callback script. We will try again later, fix the script please!")){
         if(cbs=="") cbs="default.js";
         var ppp = path.join(app.getPath('userData'), 'callbacks', cbs);
         if (!fs.existsSync(ppp)){

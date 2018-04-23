@@ -2,6 +2,7 @@
 const https = require('http');
 const settings = require('./settingsholder.js')
 const myEmitter = require('./pubsub.js');
+const requestloop = require('./requestloop.js')
 
 const BigInteger = require("big-integer");
 const nxt = require('nxtjs');
@@ -119,8 +120,10 @@ var signing = false;
 function refresh(){
     const t = settings.getNode();
     if(t==""){
+        console.log("Setting t to node because t="+t);
         ip = "balance-" + loadbalancer + ".xel.org";
     }else{
+        console.log("Setting t to 127 because t="+t);
         ip = "127.0.0.1";
     }
     rpcurl = 'http://' + ip + ":" + ((testnet)?"16876":"17876") + "/nxt";
@@ -220,7 +223,7 @@ function sign_and_pay(unsigned_tx) {
     if(signing==true) return null;
     if(firstFullDone==false){
         firstFullDone = true;
-        return null;
+        // TODO REMOVE return null;
     }
     return new Promise(function(resolve, reject) {
         if(signing==true) return;
