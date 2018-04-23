@@ -2,11 +2,49 @@
 const https = require('http');
 const settings = require('./settingsholder.js')
 const myEmitter = require('./pubsub.js');
-const tsk = require('./taskscripts.js');
 
 const BigInteger = require("big-integer");
 const nxt = require('nxtjs');
 const querystring = require('querystring');
+
+
+const getContentPost = function(postData) {
+    // return new pending promise
+    return new Promise((resolve, reject) => {
+        // select http or https module, depending on reqested url
+
+        var post_options = {
+            host: requestloop.ip,
+            port: requestloop.port,
+            path: '/nxt?requestType=sendTransaction',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(postData)
+            }
+        };
+        const request = https.request(post_options, (response) => {
+
+            // handle http errors
+            if (response.statusCode < 200 || response.statusCode > 299) {
+                reject(new Error('Failed to load page, status code: ' + response.statusCode));
+            }
+            // temporary data holder
+            const body = [];
+            // on every content chunk, push it to the data array
+            response.on('data', (chunk) => {
+                body.push(chunk)
+            });
+            // we are done, resolve promise with those joined chunks
+            response.on('end', () => resolve(body.join('')));
+        });
+        // handle connection errors of the request
+        request.on('error', (err) => reject(err));
+
+        request.write(postData);
+        request.end();
+    })
+};
 
 var loadbalancer = Math.floor(Math.random() * 5) + 1;
 var ip = '';
@@ -208,7 +246,7 @@ function sign_and_pay(unsigned_tx) {
                 'transactionBytes': signed[i],
                 'prunableAttachmentJSON': JSON.stringify(prunables[i])
             });
-            tsk.getContentPost(datata)
+            getContentPost(datata)
                 .then((html) => {
                     if(html.indexOf("fullHash")>0){
                         ringBuffer.push(unsigned[i]);

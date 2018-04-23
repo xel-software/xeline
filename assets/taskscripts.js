@@ -264,7 +264,7 @@ function GetRow(work) {
 
     if (!closed){
         if(broadcast.indexOf(work["id"])>-1){
-            element += '<td><button id=\'closework_' + work["id"] + '\' onclick="taskscripts.killwork(\'' + work["id"] + '\');" disabled>Broadcast</button></td>';
+            element += '<td><button id=\'closework_' + work["id"] + '\' onclick="taskscripts.killwork(\'' + work["id"] + '\');" disabled>Wait for Block</button></td>';
 
         }else{
             element += '<td><button id=\'closework_' + work["id"] + '\' onclick="taskscripts.killwork(\'' + work["id"] + '\');">Cancel</button></td>';
