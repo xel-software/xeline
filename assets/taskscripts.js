@@ -21,6 +21,7 @@ var totalfees = 0;
 var init = 0;
 var metadata = {};
 var broadcast=[];
+var totalnqt = 0;
 
 myEmitter.pubsub.on('works', (event, arg) => {
     var myNode = document.getElementById("taskbody");
@@ -546,27 +547,32 @@ function initme() {
                 'transactionBytes': signed[i],
                 'prunableAttachmentJSON': signedA[i]
             });
-            getContentPost(datata)
-                .then((html) => {
-                    if (i == signed.length) {
-                        var t = JSON.parse(html);
-                        if ("errorDescription" in t) {
-                            txt10.innerHTML = "Fatal error: " + t["errorDescription"];
+
+            if(totalnqt>requestloop.getbb()){
+                txt10.innerHTML = "You are missing " + requestloop.formatNXT(totalnqt-requestloop.getbb()) + " XEL, you should top up your wallet! Nothing was broadcast!";
+            }else{
+                getContentPost(datata)
+                    .then((html) => {
+                        if (i == signed.length) {
+                            var t = JSON.parse(html);
+                            if ("errorDescription" in t) {
+                                txt10.innerHTML = "Fatal error: " + t["errorDescription"];
+                            } else {
+                                metadata["txid"] = t["transaction"];
+                                metadata["output"] = "@@@@@@";
+                                settings.storeWork(metadata["txid"], metadata);
+                                txt10.innerHTML = "Successfully broadcasted job with transaction ID = " + t["transaction"] + "<br>Please go into your <a id=tmp data-section='mytasks'>work list overview</a>, it should appear there shortly!";
+
+                            }
+
                         } else {
-                            metadata["txid"] = t["transaction"];
-                            metadata["output"] = "@@@@@@";
-                            settings.storeWork(metadata["txid"], metadata);
-                            txt10.innerHTML = "Successfully broadcasted job with transaction ID = " + t["transaction"] + "<br>Please go into your <a id=tmp data-section='mytasks'>work list overview</a>, it should appear there shortly!";
-
+                            console.log("Submitted " + i + " of " + signed.length);
                         }
-
-                    } else {
-                        console.log("Submitted " + i + " of " + signed.length);
-                    }
-                })
-                .catch((err) => {
-                    txt10.innerHTML = "An error occured during the broadcast: " + err
-                });
+                    })
+                    .catch((err) => {
+                        txt10.innerHTML = "An error occured during the broadcast: " + err
+                    });
+            }
         }
 
 
@@ -623,6 +629,7 @@ myEmitter.pubsub.on('show-newtask2-section', (event, arg) => {
     x3.innerHTML = toBeHead["pow_limit"];
     x4.innerHTML = requestloop.formatNXT(toBeHead["pow_price"]);
     x5.innerHTML = requestloop.formatNXT(toBeHead["bounty_price"]);
+    totalnqt = toBeHead["pow_limit"] * toBeHead["pow_price"] + (toBeHead["iterations"] * toBeHead["bounty_limit"] * toBeHead["bounty_price"]);
     x6.innerHTML = requestloop.formatNXT(toBeHead["pow_limit"] * toBeHead["pow_price"] + (toBeHead["iterations"] * toBeHead["bounty_limit"] * toBeHead["bounty_price"]));
     x7.innerHTML = requestloop.formatNXT(totalfees);
     x8.innerHTML = toBeHead["callback"];
