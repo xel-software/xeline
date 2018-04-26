@@ -105,7 +105,7 @@ var balance = "0";
 var balanceu = "0";
 var totalOpen = 0;
 var totalClosed = 0;
-var balancenqt = 0;
+var balancenqt = "0";
 var myOpen = 0;
 var myClosed = 0;
 var grabs = 0;
@@ -308,7 +308,7 @@ function pullin_full(){
             }
             if ("balanceNQT" in resp){
                 balance = resp["balanceNQT"];
-                balancenqt = parseInt(balance);
+                balancenqt = resp["balanceNQT"];
             }else
             {
             }

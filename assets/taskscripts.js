@@ -548,8 +548,11 @@ function initme() {
                 'prunableAttachmentJSON': signedA[i]
             });
 
-            if(totalnqt>requestloop.getbb()){
-                txt10.innerHTML = "You are missing " + requestloop.formatNXT(totalnqt-requestloop.getbb()) + " XEL, you should top up your wallet! Nothing was broadcast!";
+            var ti = parseFloat(requestloop.amountformat(requestloop.getbb()))
+            var tq = parseFloat(requestloop.formatNXT(totalnqt));
+            console.log("You Have " + ti + ", you need " + tq + ", diff " + requestloop.formatNXT(tq-ti));
+            if(tq>ti){
+                txt10.innerHTML = "You are missing " + requestloop.amountformat(totalnqt-requestloop.getbb()) + " XEL, you should top up your wallet! Nothing was broadcast!";
             }else{
                 getContentPost(datata)
                     .then((html) => {
