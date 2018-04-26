@@ -2,12 +2,25 @@
 const https = require('http');
 const settings = require('./settingsholder.js')
 const myEmitter = require('./pubsub.js');
-const requestloop = require('./requestloop.js')
 
 const BigInteger = require("big-integer");
 const nxt = require('nxtjs');
 const querystring = require('querystring');
 
+
+
+var loadbalancer = Math.floor(Math.random() * 5) + 1;
+var ip = '';
+const fip = "faucet.xel.org";
+
+const testnet = true;
+const port = ((testnet)?16876:17876);
+
+var connected = false;
+var rpcurl = ''
+var fauceturl = 'http://' + fip + ":" + ((testnet)?"16876":"17876") + "/nxt";
+
+var firstFullDone = false;
 
 const getContentPost = function(postData) {
     // return new pending promise
@@ -15,8 +28,8 @@ const getContentPost = function(postData) {
         // select http or https module, depending on reqested url
 
         var post_options = {
-            host: requestloop.ip,
-            port: requestloop.port,
+            host: ip,
+            port: port,
             path: '/nxt?requestType=sendTransaction',
             method: 'POST',
             headers: {
@@ -46,20 +59,6 @@ const getContentPost = function(postData) {
         request.end();
     })
 };
-
-var loadbalancer = Math.floor(Math.random() * 5) + 1;
-var ip = '';
-const fip = "faucet.xel.org";
-
-const testnet = true;
-const port = ((testnet)?16876:17876);
-
-var connected = false;
-var rpcurl = ''
-var fauceturl = 'http://' + fip + ":" + ((testnet)?"16876":"17876") + "/nxt";
-
-var firstFullDone = false;
-
 var createRingBuffer = function(length){
     /* https://stackoverflow.com/a/4774081 */
     var pointer = 0, buffer = []; 
@@ -113,11 +112,14 @@ var lasttargets = [];
 var works=[];
 var zeros = "00000000";
 var lastReceivedBlock = 0;
+var lastReceivedBlockComputation = 0;
+var lastPayoutBlock=0;
 var signing = false;
 
 // Longpoller
 
 function refresh(){
+
     const t = settings.getNode();
     if(t==""){
         console.log("Setting t to node because t="+t);
@@ -176,7 +178,7 @@ function amountconvert (amount) {
 };
 
 function pullin(){
-    if(lastReceivedBlock==0){
+    if(lastReceivedBlock==0 || lastReceivedBlockComputation==0){
         pullin_full();
     }else{
         // Invoke cheap checking
@@ -195,18 +197,29 @@ function pullin_light(){
           resp.on('end', () => {
             var resp = JSON.parse(data);
                 connected = true;
+                var otherpull = false;
                 if ("lastBlock" in resp){
-                    if(lastReceivedBlock!=resp["lastBlock"])
+                    if(lastReceivedBlock!=resp["lastBlock"]){
                         pullin_full();
+                        otherpull=true;
+                    }
                 }else
                 {
                     connected = false;
                 }
-
+                if ("lastBlockComputation" in resp){
+                    if(lastBlockComputation!=resp["lastBlockComputation"]){
+                        pullin_full();
+                        otherpull=true;
+                    }
+                }else
+                {
+                }
                 if ("unconfirmedBalanceNQT" in resp){
                     balanceu = resp["unconfirmedBalanceNQT"];
                 }
-                pushinfo_light();
+                if(!otherpull)
+                    pushinfo_light();
           });
         }).on("error", (err) => {
             connected=false;
@@ -251,6 +264,7 @@ function sign_and_pay(unsigned_tx) {
             });
             getContentPost(datata)
                 .then((html) => {
+                    console.log(html);
                     if(html.indexOf("fullHash")>0){
                         ringBuffer.push(unsigned[i]);
                         console.log(html);
@@ -301,6 +315,11 @@ function pullin_full(){
             }else
             {
             }
+            if ("lastBlockComputation" in resp){
+                lastReceivedBlockComputation = resp["lastBlockComputation"];
+            }else
+            {
+            }
             if ("unconfirmedBalanceNQT" in resp){
                 balanceu = resp["unconfirmedBalanceNQT"];
             }else
@@ -343,9 +362,11 @@ function pullin_full(){
             {
             }
 
-            if ("pendingPayouts" in resp && signing==false){
+            if ("pendingPayouts" in resp && signing==false && lastPayoutBlock != resp["lastBlock"]){
                 var ops = sign_and_pay(resp["pendingPayouts"]);
-                if(ops!=null) ops.then(function (result) { signing = false; });
+                lastPayoutBlock = resp["lastBlock"];
+                if(ops!=null) ops.then(function (result) { signing = false; console.log("Finished SIGN_AND_PAY"); });
+                else signing=false;
             }
             
 
@@ -498,15 +519,20 @@ function pushinfo_light(){
     myEmitter.pubsub.emit('status_light', [connected, balanceu]);
 }
 
-module.exports.rpcurl = rpcurl;
-module.exports.ip = ip;
-module.exports.port = port;
-module.exports.testnet = testnet;
+function getip(){ return ip; };
+function getport(){ return port; };
+function gettestnet(){ return gettestnet; };
+function getrpcurl(){ return rpcurl; };
+
+module.exports.getrpcurl = getrpcurl;
+module.exports.getip = getip;
+module.exports.getport = getport;
+module.exports.gettestnet = gettestnet;
 module.exports.init = pushinfo;
 module.exports.amountformat = amountformat;
-module.exports.formatNQT = formatNQT;
-module.exports.formatNXT = formatNXT;
 module.exports.fauceturl=fauceturl;
 module.exports.refresh=refresh;
+module.exports.formatNQT = formatNQT;
+module.exports.formatNXT = formatNXT;
 
 pullin();

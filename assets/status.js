@@ -158,7 +158,7 @@ myEmitter.pubsub.on('status', (event, arg) => {
     let vmc = document.getElementById('myClosed');
     let vg = document.getElementById('grabs');
 
-    nt.innerHTML="Node: <a href=# data-section=\"nodes\">" + reql.ip + "</a> (" + ((reql.testnet)?"Test":"Main") +")</span>";
+    nt.innerHTML="Node: <a href=# data-section=\"nodes\">" + reql.getip() + "</a> (" + ((reql.gettestnet())?"Test":"Main") +")</span>";
     balance.innerHTML=reql.amountformat(event[4]);
     balanceu.innerHTML=reql.amountformat(event[5]);
     if(balance.innerHTML!=balanceu.innerHTML){

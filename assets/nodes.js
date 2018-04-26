@@ -29,8 +29,8 @@ let wd_btn100 = document.getElementById('wd_btn1001');
 wd_btn100.addEventListener('click', (e) => {
     var nv = document.getElementById('DropListNode').value;
     e.preventDefault();
-    settings.setNode(nv);
-    rl.refresh();
+    settings.setNode(nv).then(function(){rl.refresh();});
+    
     Show("Your new settings have been saved")
 });
 }

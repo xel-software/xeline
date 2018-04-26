@@ -103,13 +103,13 @@ function killwork(idd){
      
           var post_data = querystring.stringify({
             'publicKey': settings.toHexString(st["pub"]),
-            
+            'computation':'true',
             'work_id': idd,
         });
           var post_options = {
-              host: requestloop.ip,
-              port: requestloop.port,
-              path: '/nxt?requestType=cancelWork',
+              host: requestloop.getip(),
+              port: requestloop.getport(),
+              path: '/nxt?requestType=cancelWork&computation=true',
               method: 'POST',
               headers: {
                   'Content-Type': 'application/x-www-form-urlencoded',
@@ -152,6 +152,7 @@ function killwork(idd){
                           signedA.push(toBeSigned[x]["transactionJSON"]["attachment"]);
                       }
                       var datata = querystring.stringify({
+                        'computation':'true',
                         'transactionBytes': signed[0],
                         'prunableAttachmentJSON': JSON.stringify(signedA[0])
                     });
@@ -186,6 +187,14 @@ function killwork(idd){
           poster.end();
 
 }
+
+function truncate(string){
+    if (string.length > 32)
+       return string.substring(0,32)+'...';
+    else
+       return string;
+ };
+
 function GetRow(work) {
     var op = settings.getWork(work["id"])
     var cb = false;
@@ -234,14 +243,14 @@ function GetRow(work) {
     }else if(closed && cb){
     }
     
-    var element = '<tr class="smaller">';
+    var element = '<tr>';
     if (cb)
         element += '<td style="padding-left: 5px; width: 24px"><i class=\'fa fa-check-circle\'></i></td>';
     else
         element += '<td style="padding-left: 5px; width: 24px"><i class=\'fa fa-ban\'></i></td>';
 
     if (op != null) {
-        element += '<td>' + op["title"] + '</td>';
+        element += '<td>' + truncate(op["title"]) + '</td>';
     } else {
         element += '<td>' + work["id"] + '</td>';
     }
@@ -257,15 +266,15 @@ function GetRow(work) {
         element += '<td>' + (work['max_closing_height'] - work['work_at_height']) + ' Blks</td>';
     else {
         if (work["timedout"] == true) {
-            element += '<td colspan=2>timed out ' + timeAgo(work['closing_timestamp']*1000+1385294400000) + '</td>';
+            element += '<td colspan=2>t-out ' + timeAgo(work['closing_timestamp']*1000+1385294400000).replace("seconds","sec").replace("minutes","min").replace("hours","hrs").replace("second","sec").replace("minute","min").replace("hour","hrs") + '</td>';
         } else if (work["cancelled"] == true) {
-            element += '<td colspan=2>cancelled ' + timeAgo(work['closing_timestamp']*1000+1385294400000) + '</td>';
-        } else element += '<td conspan=2>finished ' + timeAgo(work['closing_timestamp']*1000+1385294400000) + '</td>';
+            element += '<td colspan=2>cancl. ' + timeAgo(work['closing_timestamp']*1000+1385294400000).replace("seconds","sec").replace("minutes","min").replace("hours","hrs").replace("second","sec").replace("minute","min").replace("hour","hrs") + '</td>';
+        } else element += '<td conspan=2>fnsh. ' + timeAgo(work['closing_timestamp']*1000+1385294400000).replace("seconds","sec").replace("minutes","min").replace("hours","hrs").replace("second","sec").replace("minute","min").replace("hour","hrs") + '</td>';
     }
 
     if (!closed){
         if(broadcast.indexOf(work["id"])>-1){
-            element += '<td><button id=\'closework_' + work["id"] + '\' onclick="taskscripts.killwork(\'' + work["id"] + '\');" disabled>Wait for Block</button></td>';
+            element += '<td><button id=\'closework_' + work["id"] + '\' onclick="taskscripts.killwork(\'' + work["id"] + '\');" disabled>Plz Wait</button></td>';
 
         }else{
             element += '<td><button id=\'closework_' + work["id"] + '\' onclick="taskscripts.killwork(\'' + work["id"] + '\');">Cancel</button></td>';
@@ -279,12 +288,12 @@ function GetRow(work) {
     if (cb) {
         if (!closed) {
             element += '<tr>';
-            element += '  <td></td><td colspan="6" class="smaller statspan">Once the job is finished, you will see here the result of the callback function located in \'' + op["callback"] + '\'.</td>';
+            element += '  <td></td><td colspan="6" class="smaller statspan" style="color: #333">Once task terminates, you will see here the result of your callback function.</td>';
             element += '</tr>';
         } else {
             if (notnormal) {
                 element += '<tr>';
-                element += '  <td></td><td colspan="6" class="smaller statspan">The callback was not called because the job terminated abnormally (timeout or cancellation).</td>';
+                element += '  <td></td><td colspan="6" class="smaller statspan" style="color: #333">The callback was not called because the job terminated abnormally (timeout or cancellation).</td>';
                 element += '</tr>';
             } else {
                 element += '<tr>';
@@ -294,7 +303,7 @@ function GetRow(work) {
         }
     } else {
         element += '<tr>';
-        element += '  <td></td><td colspan="6" class="smaller statspan">This job does not have a callback assigned. Callbacks can help you automatically analyze your results. Please read more on this topic in the ePL handbook.</td>';
+        element += '  <td></td><td colspan="6" class="smaller statspan">Task had no callback assigned. Please read more on this topic in the ePL handbook.</td>';
         element += '</tr>';
     }
     return element;
@@ -340,9 +349,9 @@ const getContentPost = function(postData) {
         // select http or https module, depending on reqested url
 
         var post_options = {
-            host: requestloop.ip,
-            port: requestloop.port,
-            path: '/nxt?requestType=sendTransaction',
+            host: requestloop.getip(),
+            port: requestloop.getport(),
+            path: '/nxt?requestType=sendTransaction&computation=true',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -392,17 +401,18 @@ function workOpen(f) {
             'bounty_limit_per_iteration': metadata['bounty_limit'],
             'iterations': metadata['iterations'],
             'cap_pow': metadata['pow_limit'],
+            'computation':'true',
         });
 
 
         txtwt3.innerHTML = "<span class='double-bounce1' id='bouncer1'></span><span class='double-bounce2' id='bouncer2'></span> <span id='faucet'>Hang tight, we are verifying the syntactical correctness ...</span>";
-        var urlx = requestloop.rpcurl + '?requestType=createWork';
-        var urlx2 = requestloop.rpcurl + '?requestType=sendTransaction';
+        var urlx = requestloop.getrpcurl() + '?requestType=createWork&computation=true';
+        var urlx2 = requestloop.getrpcurl() + '?requestType=sendTransaction&computation=true';
 
         var post_options = {
-            host: requestloop.ip,
-            port: requestloop.port,
-            path: '/nxt?requestType=createWork',
+            host: requestloop.getip(),
+            port: requestloop.getport(),
+            path: '/nxt?requestType=createWork&computation=true',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -430,6 +440,7 @@ function workOpen(f) {
                     txtwt3.innerHTML = "An error occured: " + resp["errorDescription"];
                     setTimeout(Clear, 3000);
                 } else if ("transactions" in resp) {
+                    console.log(resp);
                     toBeSigned = resp["transactions"];
                     toBeHead = metadata;
                     totalfees = 0;
@@ -518,13 +529,15 @@ function initme() {
             console.log(toBeSigned[x]);
             var bts = toBeSigned[x]["unsignedTransactionBytes"];
             var stx = nxt.signTransactionBytes(bts, st["mnemonic"]);
+            console.log("SGN: " + stx);
             signed.push(stx);
             signedA.push(toBeSigned[x]["transactionJSON"]["attachment"]);
         }
         txt10.innerHTML = "<span class='double-bounce1' id='bouncer1'></span><span class='double-bounce2' id='bouncer2'></span> <span id='faucet'>Signing finished, broadcasting " + signed.length + " TX now ...</span>";
-        var urlx2 = requestloop.rpcurl + '?requestType=sendTransaction';
+        var urlx2 = requestloop.getrpcurl() + '?requestType=sendTransaction&computation=true';
         for (var i = 0; i < signed.length; i++) {
             var datata = querystring.stringify({
+                'computation':'true',
                 'transactionBytes': signed[i],
                 'prunableAttachmentJSON': JSON.stringify(signedA[i])
             });

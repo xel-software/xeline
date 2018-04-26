@@ -61,8 +61,8 @@ wd_btn.addEventListener('click', (e) => {
     terms.disabled = true;
 
     textwd.innerHTML="<span class='double-bounce1' id='bouncer1'></span><span class='double-bounce2' id='bouncer2'></span> <span id='faucet'>Hang tight, we are processing your withdrawal ...</span>";
-    var urlx = requestloop.rpcurl + '?requestType=sendMoney&publicKey=' +  settings.toHexString(st["pub"]) + '&recipient=' + reeddec + "&deadline=64&feeNQT=10000000&amountNQT=" + amnt;
-    var urlx2 = requestloop.rpcurl + '?requestType=sendTransaction';
+    var urlx = requestloop.getrpcurl() + '?requestType=sendMoney&publicKey=' +  settings.toHexString(st["pub"]) + '&recipient=' + reeddec + "&deadline=64&feeNQT=10000000&amountNQT=" + amnt;
+    var urlx2 = requestloop.getrpcurl() + '?requestType=sendTransaction';
 
     console.log("Withdraw URL: " + urlx);
     https.get(urlx, (resp) => {

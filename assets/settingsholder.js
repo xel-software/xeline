@@ -50,7 +50,10 @@ function getNode(){
 }
 
 function setNode(x){
-  store.set('node', x);
+  return new Promise(function(resolve){
+    store.set('node', x);
+    resolve();
+  });
 }
 
 function getKey(){
