@@ -1,0 +1,10 @@
+// input m array is stored in array "bounties"
+// storage integers of last iteration are stored in array "storages"
+var path = "Path: ";
+var i;
+for (i = 1; i < 49; i++) { 
+    path += storages[0][i] + "\t";
+}
+//path = path + storages[1];
+console.log("A miner has found a PATH less than 40,000 miles: " + storages[0]);
+console.log(path);

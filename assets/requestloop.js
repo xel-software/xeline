@@ -7,8 +7,6 @@ const BigInteger = require("big-integer");
 const nxt = require('nxtjs');
 const querystring = require('querystring');
 
-
-
 var loadbalancer = Math.floor(Math.random() * 5) + 1;
 var ip = '';
 const fip = "faucet.xel.org";
@@ -114,7 +112,6 @@ var works=[];
 var zeros = "00000000";
 var lastReceivedBlock = 0;
 var lastReceivedBlockComputation = 0;
-var lastPayoutBlock=0;
 var signing = false;
 
 // Longpoller
@@ -198,10 +195,15 @@ function pullin_light(){
           resp.on('end', () => {
             var resp = JSON.parse(data);
                 connected = true;
+                var alreadyfullpulled = false;
                 var otherpull = false;
                 if ("lastBlock" in resp){
                     if(lastReceivedBlock!=resp["lastBlock"]){
-                        pullin_full();
+                        if(!alreadyfullpulled){
+                            alreadyfullpulled=true;
+                            pullin_full();
+                            
+                        }
                         otherpull=true;
                     }
                 }else
@@ -209,8 +211,12 @@ function pullin_light(){
                     connected = false;
                 }
                 if ("lastBlockComputation" in resp){
-                    if(lastBlockComputation!=resp["lastBlockComputation"]){
-                        pullin_full();
+                    if(lastReceivedBlockComputation!=resp["lastBlockComputation"]){
+                        if(!alreadyfullpulled){
+                            alreadyfullpulled=true;
+                            pullin_full();
+                           
+                        }
                         otherpull=true;
                     }
                 }else
@@ -234,7 +240,7 @@ function sign_and_pay(unsigned_tx) {
     var prunables = [];
     var signed = [];
 
-    if(signing==true) return null;
+    if(signing==true) return new Promise(function(resolve, reject) { resolve(); });
     if(firstFullDone==false){
         firstFullDone = true;
         // TODO REMOVE return null;
@@ -282,14 +288,14 @@ function sign_and_pay(unsigned_tx) {
                     console.log("Failed submitting a payment on a large scale, we will try (and hope) in the next block: " + err);
                 });
         }
-        resolve(null);
+        resolve();
 
 
     });
 }
 
 function pullin_full(){
-    console.log("Doing a full pull using last known block id " + lastReceivedBlock);
+    console.log("Doing a full pull using last known block id " + lastReceivedBlock + " and computation block " + lastReceivedBlockComputation);
     const st = settings.getKey();
     https.get(rpcurl + "?requestType=getState&includeLastTargets=true&includeTasks=true&account=" + st["id"], (resp) => {
       let data = '';
@@ -312,16 +318,7 @@ function pullin_full(){
             }else
             {
             }
-            if ("lastBlock" in resp){
-                lastReceivedBlock = resp["lastBlock"];
-            }else
-            {
-            }
-            if ("lastBlockComputation" in resp){
-                lastReceivedBlockComputation = resp["lastBlockComputation"];
-            }else
-            {
-            }
+           
             if ("unconfirmedBalanceNQT" in resp){
                 balanceu = resp["unconfirmedBalanceNQT"];
             }else
@@ -335,6 +332,16 @@ function pullin_full(){
             }
             if ("myWorks" in resp){
                 works = resp["myWorks"];
+            }else
+            {
+            }
+            if ("lastBlock" in resp){
+                lastReceivedBlock = resp["lastBlock"];
+            }else
+            {
+            }
+            if ("lastBlockComputation" in resp){
+                lastReceivedBlockComputation = resp["lastBlockComputation"];
             }else
             {
             }
@@ -364,11 +371,8 @@ function pullin_full(){
             {
             }
 
-            if ("pendingPayouts" in resp && signing==false && lastPayoutBlock != resp["lastBlock"]){
-                var ops = sign_and_pay(resp["pendingPayouts"]);
-                lastPayoutBlock = resp["lastBlock"];
-                if(ops!=null) ops.then(function (result) { signing = false; console.log("Finished SIGN_AND_PAY"); });
-                else signing=false;
+            if ("pendingPayouts" in resp && signing==false){
+                sign_and_pay(resp["pendingPayouts"]).then(function () { signing = false; console.log("Finished SIGN_AND_PAY"); });
             }
             
 

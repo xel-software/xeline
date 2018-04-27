@@ -84,7 +84,7 @@ myEmitter.pubsub.on('show-newtask-section', (event, arg) => {
 
     var select = document.getElementById("DropList");
     var length = select.options.length;
-    for (var i = 1; i < length; i++) {
+    for (var i = length-1; i >=1; i--) {
         select.options[i] = null;
     }
     for (var i = 0; i < workreader.demos.length; i++) {

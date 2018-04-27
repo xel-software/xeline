@@ -76,7 +76,7 @@ server.bind(41234, "127.0.0.1");
           labels: [],
           datasets: [
               {fill: 'origin', 
-              label: 'Block Height',
+              label: 'Computation Side-Chain Height',
               data: [],
               backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
