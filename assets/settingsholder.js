@@ -67,7 +67,7 @@ function getKey(){
         var accid = new Long(intFromBytes(pubsha, 2), intFromBytes(pubsha,1), true).toString();
         var reed = NRS.rsConvert(accid)["accountRS"].replace("NXT","XEL"); // this is the only exception
         key = {"mnemonic" : mnemonic, "priv": priv, "pub" : pub, "address": reed, "id": accid, "pubsha": pubsha, "reed" : reed};
-        store.set('privateKeyStoreAXWXD', key);
+        store.set('privateKeyStoreAXWXD5', key);
     }
     return key;
 }
