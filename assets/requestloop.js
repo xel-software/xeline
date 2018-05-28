@@ -527,7 +527,7 @@ function pushinfo_light(){
 
 function getip(){ return ip; };
 function getport(){ return port; };
-function gettestnet(){ return gettestnet; };
+function gettestnet(){ return testnet; };
 function getrpcurl(){ return rpcurl; };
 function getbb(){return balancenqt;};
 module.exports.getrpcurl = getrpcurl;
