@@ -11,7 +11,7 @@ var loadbalancer = Math.floor(Math.random() * 5) + 1;
 var ip = '';
 const fip = "faucet.xel.org";
 
-const testnet = true;
+const testnet = false;
 const port = ((testnet)?16876:17876);
 
 var connected = false;

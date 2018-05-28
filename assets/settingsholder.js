@@ -38,7 +38,7 @@ function toHexString(byteArray) {
 
 // Do not rely on nrsjs on this one, we want to do crypto ourselves
 function checkKey(){
-  var key = store.get('privateKeyStoreAXWXD');
+  var key = store.get('privateKeyStoreAXWXD5');
   return key;
 }
 
@@ -57,7 +57,7 @@ function setNode(x){
 }
 
 function getKey(){
-    var key = store.get('privateKeyStoreAXWXD');
+    var key = store.get('privateKeyStoreAXWXD5');
     if(key==null){
         var code = new Mnemonic(Mnemonic.Words.ENGLISH);
         var mnemonic = code.toString();
