@@ -7,22 +7,23 @@ const requestloop = require('./requestloop.js')
 let text = document.getElementById('faucet');
 let faucet_btn = document.getElementById('faucet_btn');
 
-
-
 myEmitter.pubsub.on('show-faucet-section', (event, arg) => {
     text.innerHTML = "";
     
 });
   
-  
 faucet_btn.addEventListener('click', () => {
   const st = settings.getKey();
-
+  const testnet = settings.getIsTestnet();
+  const port = ((testnet) ? 16876 : 17876);
+  const fip = "faucet.xel.org";
+  var fauceturl = 'http://' + fip + ":" + ((testnet) ? "16876" : "17876") + "/nxt";
+  
   //faucet_btn.style.opacity=0.3;
   faucet_btn.disabled = true;
   text.innerHTML="<span class='double-bounce1' id='bouncer1'></span><span class='double-bounce2' id='bouncer2'></span> <span id='faucet'>Hang tight, we are contacting the faucet ...</span>";
-  console.log("Asking: " + requestloop.fauceturl + '?requestType=faucet&account=' + st["id"]);
-  https.get(requestloop.fauceturl + '?requestType=faucet&account=' + st["id"], (resp) => {
+  console.log("Asking: " + fauceturl + '?requestType=faucet&account=' + st["id"]);
+  https.get(fauceturl + '?requestType=faucet&account=' + st["id"], (resp) => {
   let data = '';
 
   resp.on('data', (chunk) => {
