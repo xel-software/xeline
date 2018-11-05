@@ -119,12 +119,16 @@ var signing = false;
 function refresh(){
 
     const t = settings.getNode();
-    if(t==""){
+    if(t=="") {
         console.log("Setting t to node because t="+t);
         ip = "balance-" + loadbalancer + ".xel.org";
-    }else{
+    } else if(t=="local") {
         console.log("Setting t to 127 because t="+t);
         ip = "127.0.0.1";
+    }
+    else {
+        console.log("Setting t to configured node because t="+t);
+        ip = t;
     }
     rpcurl = 'http://' + ip + ":" + ((testnet)?"16876":"17876") + "/nxt";
     let nt = document.getElementById('nodetext');
