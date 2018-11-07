@@ -26,7 +26,8 @@ const store = new Store({
   configName: 'xeline-preferences-x',
   defaults: {
     // 800x600 is the default size of our window
-    windowBounds: { width: 800, height: 600 }
+    windowBounds: { width: 800, height: 600 },
+    isTestnet: false
   }
 });
 
@@ -90,6 +91,21 @@ function checkAbout(){
 function setAbout(){
   store.set("aboutShown","yes");
 }
+
+function setIsTestnet(x){
+  return new Promise(function(resolve){
+    store.set('isTestnet', x.toString());
+    resolve();
+  });
+}
+function getIsTestnet(){
+  var key = store.get('isTestnet');
+  if(key==null)
+    key='false';
+  return (key == 'true');
+}
+
+
 module.exports.getKey = getKey;
 module.exports.toHexString = toHexString;
 module.exports.getWork = getWork;
@@ -99,3 +115,5 @@ module.exports.checkAbout = checkAbout;
 module.exports.setAbout = setAbout;
 module.exports.setNode = setNode;
 module.exports.getNode = getNode;
+module.exports.setIsTestnet = setIsTestnet;
+module.exports.getIsTestnet = getIsTestnet;

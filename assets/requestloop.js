@@ -11,12 +11,12 @@ var loadbalancer = Math.floor(Math.random() * 5) + 1;
 var ip = '';
 const fip = "faucet.xel.org";
 
-const testnet = false;
-const port = ((testnet)?16876:17876);
+const testnet = settings.getIsTestnet();
+const port = ((testnet) ? 16876 : 17876);
 
 var connected = false;
 var rpcurl = ''
-var fauceturl = 'http://' + fip + ":" + ((testnet)?"16876":"17876") + "/nxt";
+var fauceturl = 'http://' + fip + ":" + ((testnet) ? "16876" : "17876") + "/nxt";
 
 var firstFullDone = false;
 
@@ -57,41 +57,42 @@ const getContentPost = function(postData) {
         request.end();
     })
 };
-var createRingBuffer = function(length){
+var createRingBuffer = function(length) {
     /* https://stackoverflow.com/a/4774081 */
-    var pointer = 0, buffer = []; 
-  
+    var pointer = 0,
+        buffer = [];
+
     return {
-      contains : function(element){
+        contains: function(element) {
             return buffer.indexOf(element) > -1;
-      },
-      get  : function(key){
-          if (key < 0){
-              return buffer[pointer+key];
-          } else if (key === false){
-              return buffer[pointer - 1];
-          } else{
-              return buffer[key];
-          }
-      },
-      push : function(item){
-        buffer[pointer] = item;
-        pointer = (pointer + 1) % length;
-        return item;
-      },
-      prev : function(){
-          var tmp_pointer = (pointer - 1) % length;
-          if (buffer[tmp_pointer]){
-              pointer = tmp_pointer;
-              return buffer[pointer];
-          }
-      },
-      next : function(){
-          if (buffer[pointer]){
-              pointer = (pointer + 1) % length;
-              return buffer[pointer];
-          }
-      }
+        },
+        get: function(key) {
+            if (key < 0) {
+                return buffer[pointer + key];
+            } else if (key === false) {
+                return buffer[pointer - 1];
+            } else {
+                return buffer[key];
+            }
+        },
+        push: function(item) {
+            buffer[pointer] = item;
+            pointer = (pointer + 1) % length;
+            return item;
+        },
+        prev: function() {
+            var tmp_pointer = (pointer - 1) % length;
+            if (buffer[tmp_pointer]) {
+                pointer = tmp_pointer;
+                return buffer[pointer];
+            }
+        },
+        next: function() {
+            if (buffer[pointer]) {
+                pointer = (pointer + 1) % length;
+                return buffer[pointer];
+            }
+        }
     };
 };
 var ringBuffer = createRingBuffer(200);
@@ -108,7 +109,7 @@ var myOpen = 0;
 var myClosed = 0;
 var grabs = 0;
 var lasttargets = [];
-var works=[];
+var works = [];
 var zeros = "00000000";
 var lastReceivedBlock = 0;
 var lastReceivedBlockComputation = 0;
@@ -116,31 +117,37 @@ var signing = false;
 
 // Longpoller
 
-function refresh(){
-
+function refresh() {
+	var loadbalancer = Math.floor(Math.random() * 5) + 1;
     const t = settings.getNode();
-    if(t==""){
-        console.log("Setting t to node because t="+t);
+    const testnet = settings.getIsTestnet();
+    
+    if (t == "") {
+        console.log("Setting t to node because t=" + t);
         ip = "balance-" + loadbalancer + ".xel.org";
-    }else{
-        console.log("Setting t to 127 because t="+t);
+    } else if (t == "local") {
+        console.log("Setting t to 127 because t=" + t);
         ip = "127.0.0.1";
+    } else {
+        console.log("Setting t to configured node because t=" + t);
+        ip = t;
     }
-    rpcurl = 'http://' + ip + ":" + ((testnet)?"16876":"17876") + "/nxt";
+    rpcurl = 'http://' + ip + ":" + ((testnet) ? "16876" : "17876") + "/nxt";
     let nt = document.getElementById('nodetext');
+    //let ntt = document.getElementById('networktext');
     let st = document.getElementById('statusind');
     st.classList.remove("connected");
     st.classList.remove("disconnected");
     st.classList.add("disconnected");
-    nt.innerHTML="Node: <a href=# data-section=\"nodes\">" + ip + "</a> (" + ((testnet)?"Test":"Main") +")</span>";
-
-    document.getElementById('topwarning').style.display="none";
-    if(testnet)
-        document.getElementById('topwarning').style.display="block";
+    nt.innerHTML = "Node: <a href=# data-section=\"nodes\">" + ip + "</a> (" + ((testnet) ? "Test" : "Main") + ")</span>";
+    //ntt.innerHTML = (testnet) ? "Testnet" : "Mainnet";
+    document.getElementById('topwarning').style.display = "none";
+    if (testnet)
+        document.getElementById('topwarning').style.display = "block";
 }
 
-function amountconvert (amount) {
-    if(amount == undefined) amount = "0";
+function amountconvert(amount) {
+    if (amount == undefined) amount = "0";
     var negative = "";
     var mantissa = "";
 
@@ -175,63 +182,60 @@ function amountconvert (amount) {
     };
 };
 
-function pullin(){
-    if(lastReceivedBlock==0 || lastReceivedBlockComputation==0){
+function pullin() {
+    if (lastReceivedBlock == 0 || lastReceivedBlockComputation == 0) {
         pullin_full();
-    }else{
+    } else {
         // Invoke cheap checking
         pullin_light();
     }
 }
 
-function pullin_light(){
+function pullin_light() {
     const st = settings.getKey();
     https.get(rpcurl + "?requestType=getLastBlockId&account=" + st["id"], (resp) => {
-          let data = '';
-    
-          resp.on('data', (chunk) => {
-            data += chunk;
-          });
-          resp.on('end', () => {
-            var resp = JSON.parse(data);
-                connected = true;
-                var alreadyfullpulled = false;
-                var otherpull = false;
-                if ("lastBlock" in resp){
-                    if(lastReceivedBlock!=resp["lastBlock"]){
-                        if(!alreadyfullpulled){
-                            alreadyfullpulled=true;
-                            pullin_full();
-                            
-                        }
-                        otherpull=true;
-                    }
-                }else
-                {
-                    connected = false;
-                }
-                if ("lastBlockComputation" in resp){
-                    if(lastReceivedBlockComputation!=resp["lastBlockComputation"]){
-                        if(!alreadyfullpulled){
-                            alreadyfullpulled=true;
-                            pullin_full();
-                           
-                        }
-                        otherpull=true;
-                    }
-                }else
-                {
-                }
-                if ("unconfirmedBalanceNQT" in resp){
-                    balanceu = resp["unconfirmedBalanceNQT"];
-                }
-                if(!otherpull)
-                    pushinfo_light();
-          });
-        }).on("error", (err) => {
-            connected=false;
-            pushinfo_light();
+        let data = '';
+
+        resp.on('data', (chunk) => {
+            data += chunk;
         });
+        resp.on('end', () => {
+            var resp = JSON.parse(data);
+            connected = true;
+            var alreadyfullpulled = false;
+            var otherpull = false;
+            if ("lastBlock" in resp) {
+                if (lastReceivedBlock != resp["lastBlock"]) {
+                    if (!alreadyfullpulled) {
+                        alreadyfullpulled = true;
+                        pullin_full();
+
+                    }
+                    otherpull = true;
+                }
+            } else {
+                connected = false;
+            }
+            if ("lastBlockComputation" in resp) {
+                if (lastReceivedBlockComputation != resp["lastBlockComputation"]) {
+                    if (!alreadyfullpulled) {
+                        alreadyfullpulled = true;
+                        pullin_full();
+
+                    }
+                    otherpull = true;
+                }
+            } else {}
+            if ("unconfirmedBalanceNQT" in resp) {
+                balanceu = resp["unconfirmedBalanceNQT"];
+            }
+            if (!otherpull)
+                pushinfo_light();
+        });
+    }).on("error", (err) => {
+        connected = false;
+        pushinfo_light();
+    });
 }
 
 function sign_and_pay(unsigned_tx) {
@@ -240,22 +244,24 @@ function sign_and_pay(unsigned_tx) {
     var prunables = [];
     var signed = [];
 
-    if(signing==true) return new Promise(function(resolve, reject) { resolve(); });
-    if(firstFullDone==false){
+    if (signing == true) return new Promise(function(resolve, reject) {
+        resolve();
+    });
+    if (firstFullDone == false) {
         firstFullDone = true;
         // TODO REMOVE return null;
     }
     return new Promise(function(resolve, reject) {
-        if(signing==true) return;
-        signing=true;
-        
-        for(var cx in unsigned_tx){
+        if (signing == true) return;
+        signing = true;
+
+        for (var cx in unsigned_tx) {
             var t = unsigned_tx[cx];
-            try{
+            try {
                 var x = t[0]["unsignedTransactionBytes"];
                 console.log("Signing: " + x)
                 var appd = t[1];
-                if(ringBuffer.contains(x)){} else {
+                if (ringBuffer.contains(x)) {} else {
                     var stx = nxt.signTransactionBytes(x, st["mnemonic"]);
                     signed.push(stx);
                     unsigned.push(x);
@@ -272,7 +278,7 @@ function sign_and_pay(unsigned_tx) {
             getContentPost(datata)
                 .then((html) => {
                     console.log(html);
-                    if(html.indexOf("fullHash")>0){
+                    if (html.indexOf("fullHash") > 0) {
                         ringBuffer.push(unsigned[i]);
                         console.log(html);
                         if (i == signed.length) {
@@ -280,7 +286,7 @@ function sign_and_pay(unsigned_tx) {
                         } else {
                             console.log("Submitted " + i + " of " + signed.length);
                         }
-                    }else{
+                    } else {
                         console.log("Failed submitting a payment, we will try (and hope) in the next block: " + err);
                     }
                 })
@@ -294,96 +300,76 @@ function sign_and_pay(unsigned_tx) {
     });
 }
 
-function pullin_full(){
+function pullin_full() {
     console.log("Doing a full pull using last known block id " + lastReceivedBlock + " and computation block " + lastReceivedBlockComputation);
     const st = settings.getKey();
     https.get(rpcurl + "?requestType=getState&includeLastTargets=true&includeTasks=true&account=" + st["id"], (resp) => {
-      let data = '';
+        let data = '';
 
-      resp.on('data', (chunk) => {
-        data += chunk;
-      });
-      resp.on('end', () => {
-        var resp = JSON.parse(data);
+        resp.on('data', (chunk) => {
+            data += chunk;
+        });
+        resp.on('end', () => {
+            var resp = JSON.parse(data);
             connected = true;
-            if ("numberOfBlocks" in resp){
+            if ("numberOfBlocks" in resp) {
                 blocks = resp["numberOfBlocks"];
-            }else
-            {
+            } else {
                 connected = false;
             }
-            if ("balanceNQT" in resp){
+            if ("balanceNQT" in resp) {
                 balance = resp["balanceNQT"];
                 balancenqt = resp["balanceNQT"];
-            }else
-            {
-            }
-           
-            if ("unconfirmedBalanceNQT" in resp){
+            } else {}
+
+            if ("unconfirmedBalanceNQT" in resp) {
                 balanceu = resp["unconfirmedBalanceNQT"];
-            }else
-            {
-            }
+            } else {}
 
-            if ("lastTargets" in resp){
+            if ("lastTargets" in resp) {
                 lasttargets = resp["lastTargets"];
-            }else
-            {
-            }
-            if ("myWorks" in resp){
+            } else {}
+            if ("myWorks" in resp) {
                 works = resp["myWorks"];
-            }else
-            {
-            }
-            if ("lastBlock" in resp){
+            } else {}
+            if ("lastBlock" in resp) {
                 lastReceivedBlock = resp["lastBlock"];
-            }else
-            {
-            }
-            if ("lastBlockComputation" in resp){
+            } else {}
+            if ("lastBlockComputation" in resp) {
                 lastReceivedBlockComputation = resp["lastBlockComputation"];
-            }else
-            {
-            }
-            if ("totalOpen" in resp){
+            } else {}
+            if ("totalOpen" in resp) {
                 totalOpen = resp["totalOpen"];
-            }else
-            {
-            }
-            if ("totalClosed" in resp){
+            } else {}
+            if ("totalClosed" in resp) {
                 totalClosed = resp["totalClosed"];
-            }else
-            {
-            }
-            if ("myOpen" in resp){
+            } else {}
+            if ("myOpen" in resp) {
                 myOpen = resp["myOpen"];
-            }else
-            {
-            }
-            if ("myClosed" in resp){
+            } else {}
+            if ("myClosed" in resp) {
                 myClosed = resp["myClosed"];
-            }else
-            {
-            }
-            if ("grabs" in resp){
+            } else {}
+            if ("grabs" in resp) {
                 grabs = resp["grabs"];
-            }else
-            {
+            } else {}
+
+            if ("pendingPayouts" in resp && signing == false) {
+                sign_and_pay(resp["pendingPayouts"]).then(function() {
+                    signing = false;
+                    console.log("Finished SIGN_AND_PAY");
+                });
             }
 
-            if ("pendingPayouts" in resp && signing==false){
-                sign_and_pay(resp["pendingPayouts"]).then(function () { signing = false; console.log("Finished SIGN_AND_PAY"); });
-            }
-            
 
             pushinfo();
-      });
+        });
     }).on("error", (err) => {
-        connected=false;
+        connected = false;
         pushinfo();
     });
 }
-var requestLoop = setInterval(function(){
+var requestLoop = setInterval(function() {
     pullin();
 }, 5000);
 
@@ -435,7 +421,7 @@ function format(params, zeroPad) {
     return output;
 };
 
-function amountformat (amount) {
+function amountformat(amount) {
     if (typeof amount == "undefined") {
         amount = "0";
     } else if (typeof amount == "string") {
@@ -452,16 +438,16 @@ function amountformat (amount) {
     mantissa = params.mantissa;
 
     var offset = 0;
-            if (mantissa != "" && mantissa.substring(0, 1) == ".") {
-                offset ++;
-            }
-            var maxLength = 6 + offset;
-            if (mantissa.length > maxLength) {
-                mantissa = mantissa.substring(0, maxLength);
-                if (mantissa.length == 1 && mantissa.substring(0, 1) == ".") {
-                    mantissa = "";
-                }
-            }
+    if (mantissa != "" && mantissa.substring(0, 1) == ".") {
+        offset++;
+    }
+    var maxLength = 6 + offset;
+    if (mantissa.length > maxLength) {
+        mantissa = mantissa.substring(0, maxLength);
+        if (mantissa.length == 1 && mantissa.substring(0, 1) == ".") {
+            mantissa = "";
+        }
+    }
 
     return format({
         "negative": negative,
@@ -516,28 +502,42 @@ function formatNQT(currency) {
     return result;
 };
 
-function pushinfo(){
-    myEmitter.pubsub.emit('status', [connected, ip, testnet,blocks, balance, balanceu, lasttargets, totalOpen, totalClosed, myOpen, myClosed, grabs]);
+function pushinfo() {
+    myEmitter.pubsub.emit('status', [connected, ip, testnet, blocks, balance, balanceu, lasttargets, totalOpen, totalClosed, myOpen, myClosed, grabs]);
     myEmitter.pubsub.emit('works', works);
 }
 
-function pushinfo_light(){
+function pushinfo_light() {
     myEmitter.pubsub.emit('status_light', [connected, balanceu]);
 }
 
-function getip(){ return ip; };
-function getport(){ return port; };
-function gettestnet(){ return testnet; };
-function getrpcurl(){ return rpcurl; };
-function getbb(){return balancenqt;};
+function getip() {
+    return ip;
+};
+
+function getport() {
+    return port;
+};
+
+function gettestnet() {
+    return testnet;
+};
+
+function getrpcurl() {
+    return rpcurl;
+};
+
+function getbb() {
+    return balancenqt;
+};
 module.exports.getrpcurl = getrpcurl;
 module.exports.getip = getip;
 module.exports.getport = getport;
 module.exports.gettestnet = gettestnet;
 module.exports.init = pushinfo;
 module.exports.amountformat = amountformat;
-module.exports.fauceturl=fauceturl;
-module.exports.refresh=refresh;
+module.exports.fauceturl = fauceturl;
+module.exports.refresh = refresh;
 module.exports.formatNQT = formatNQT;
 module.exports.formatNXT = formatNXT;
 module.exports.getbb = getbb;

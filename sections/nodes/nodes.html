@@ -2,24 +2,25 @@
   <section id="nodes-section" class="section js-section u-category-media">
     <header class="section-header">
       <div class="section-wrapper">
-        <h1>
-          <i class="fa fa-info-circle"></i>
-                    Configure How You Want to Connect to the XEL Netowrk
-                  
-        </h1>
+        <h1><i class="fa fa-info-circle"></i> Configure How You Want to Connect to the XEL Network</h1>
         <p>By default, Xeline connects to a load balanced public node. This gives you maximum flexibility and very short set-up times. However, it may be sometimes required to set up an own private XEL node on your local host. In this section, you can configure whether you want Xeline to connect through our load balancer, or to your private node.</p>
       </div>
     </header>
     <p class="centered">
       <select class="weirdcenter" id="DropListNode">
-        <option value="">Connect via the public XEL load balancer</option>
+        <option value="">Connect via XEL mainnet</option>
+        <option value="testnet">Connect via XEL testnet</option>
         <option value="local">Connect via a local node at 127.0.0.1</option>
       </select>
     </p>
-    <p class="centered"><div class="gap-high centered"><div class="rainbow-button-wrapper">
-      <button id="wd_btn1001">Save</button>
-    </div></div></p>
-<p class="greyish centered" id="txtwt100"></p>
+    <p class="centered">
+	    <div class="gap-high centered">
+		    <div class="rainbow-button-wrapper">
+		      <button id="wd_btn1001">Save</button>
+		    </div>
+	    </div>
+    </p>
+    <p class="greyish centered" id="txtwt100"></p>
     </section>
 </template>
 <script type="text/javascript">
