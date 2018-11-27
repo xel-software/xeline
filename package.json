@@ -46,7 +46,7 @@
     "async": "^2.6.1",
     "big-integer": "^1.6.36",
     "bitcore-mnemonic": "^1.5.0",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.1.2",
     "chart-stream": "^1.1.1",
     "electron-settings": "^3.2.0",
     "electron-shortcut-normalizer": "^1.0.0",
