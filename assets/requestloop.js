@@ -118,13 +118,13 @@ var signing = false;
 // Longpoller
 
 function refresh() {
-	var loadbalancer = Math.floor(Math.random() * 5) + 1;
+	var loadbalancer = Math.floor(Math.random() * 6) + 1;
     const t = settings.getNode();
     const testnet = settings.getIsTestnet();
-    
+
     if (t == "") {
         console.log("Setting t to node because t=" + t);
-        ip = "balance-" + loadbalancer + ".xel.org";
+        ip = "computation-" + loadbalancer + ".xel-project.org";
     } else if (t == "local") {
         console.log("Setting t to 127 because t=" + t);
         ip = "127.0.0.1";
