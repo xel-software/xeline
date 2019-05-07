@@ -9,7 +9,7 @@ const querystring = require('querystring');
 
 var loadbalancer = Math.floor(Math.random() * 5) + 1;
 var ip = '';
-const fip = "faucet.xel.org";
+const fip = "faucet.xel-project.org";
 
 const testnet = settings.getIsTestnet();
 const port = ((testnet) ? 16876 : 17876);
@@ -122,9 +122,12 @@ function refresh() {
     const t = settings.getNode();
     const testnet = settings.getIsTestnet();
 
-    if (t == "") {
+    if (testnet) {
+        console.log("Setting t to testnet node because testnet=" + testnet);
+        ip = "testnet-0" + loadbalancer + ".xel-project.org";
+    } else if (t == "") {
         console.log("Setting t to node because t=" + t);
-        ip = "computation-" + loadbalancer + ".xel-project.org";
+        ip = "computation-0" + loadbalancer + ".xel-project.org";
     } else if (t == "local") {
         console.log("Setting t to 127 because t=" + t);
         ip = "127.0.0.1";

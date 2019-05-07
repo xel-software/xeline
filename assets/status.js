@@ -145,16 +145,18 @@ myEmitter.pubsub.on('status_light', (event, arg) => {
 myEmitter.pubsub.on('status', (event, arg) => {
 	const t = settings.getNode();
     const testnet = settings.getIsTestnet();
-    var loadbalancer = Math.floor(Math.random() * 5) + 1;
+    var loadbalancer = Math.floor(Math.random() * 6) + 1;
     var ip = "";
-    if (t == "") {
-        ip = "balance-" + loadbalancer + ".xel.org";
+    if (testnet) {
+        ip = "testnet-0" + loadbalancer + ".xel-project.org";
+    } else if (t == "") {
+        ip = "computation-0" + loadbalancer + ".xel-project.org";
     } else if (t == "local") {
         ip = "127.0.0.1";
     } else {
         ip = t;
     }
-	
+
     let st = document.getElementById('statusind');
     let nt = document.getElementById('nodetext');
     //let ntt = document.getElementById('networktext');
