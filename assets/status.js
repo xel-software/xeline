@@ -148,9 +148,9 @@ myEmitter.pubsub.on('status', (event, arg) => {
     var loadbalancer = Math.floor(Math.random() * 6) + 1;
     var ip = "";
     if (testnet) {
-        ip = "testnet-0" + loadbalancer + ".xel-project.org";
+        ip = "testnet-0" + loadbalancer + ".xel.org";
     } else if (t == "") {
-        ip = "computation-0" + loadbalancer + ".xel-project.org";
+        ip = "computation-0" + loadbalancer + ".xel.org";
     } else if (t == "local") {
         ip = "127.0.0.1";
     } else {

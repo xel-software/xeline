@@ -48,7 +48,7 @@ exports.initialize = () => {
     exports.updateMenu()
   })
 
-  const server = "http://autoupdate.xel-project.org:3000"
+  const server = "http://autoupdate.xel.org:3000"
   const feed = `${server}/update/${process.platform}/${app.getVersion()}`
   autoUpdater.setFeedURL(feed)
   autoUpdater.checkForUpdates()

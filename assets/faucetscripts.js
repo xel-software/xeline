@@ -16,7 +16,7 @@ faucet_btn.addEventListener('click', () => {
   const st = settings.getKey();
   const testnet = settings.getIsTestnet();
   const port = ((testnet) ? 16876 : 17876);
-  const fip = "faucet.xel-project.org";
+  const fip = "faucet.xel.org";
   var fauceturl = 'http://' + fip + ":" + ((testnet) ? "16876" : "17876") + "/nxt";
 
   //faucet_btn.style.opacity=0.3;
