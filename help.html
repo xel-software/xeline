@@ -1,0 +1,39 @@
+<template class="task-template">
+        <section id="help-fees-section" class="section js-section u-category-media">
+            <header class="section-header">
+                <div class="section-wrapper">
+                  <h1>
+                    <i class="fa fa-info-circle"></i>
+                    Why Do We Need Transaction Fees?
+                  </h1>
+                  <p>For every (standard) transaction that you submit to the (main) blockchain, you need to pay a small amount of fees. This is required in order to prevent a certain type of DDOS (distributed denial of service) where an attacker submits a large number of transactions to the network with the intention to clog the processing of other, more legitimate, transactions.</p>
+                  <p>Transactions that do not require any fees include all work related transactions such as "Create Work", "Submit Solution" and "Cancel Work". This is possible, because those run in a hardended side-chain which is already secured against a variety of DDOS attacks. While the side-chain is still "best effort", this model makes the interaction with XEL as easy as 1-2-3 and does not require you to acquire any coins in you, e.g., just want to start mining without submitting your own tasks.</p>
+                </div>
+              </header>
+        </section>
+
+        <section id="help-flops-section" class="section js-section u-category-media">
+                <header class="section-header">
+                    <div class="section-wrapper">
+                      <h1>
+                        <i class="fa fa-info-circle"></i>
+                        How is the Network Power Assessed?
+                      </h1>
+                      <p>Since the XEL blockchain is decentralized with many computation nodes (each having different hardware specs) mostly acting entirely independently of each other, measuring the overall computational power is a bit challenging. What would be very easy in a centralized setting, where you exactly know how many nodes are participating and how many of their resources they are contributing, is requiring for new approaches in the decentralized and anonymous setting that we face here. In fact, since we do not have a "roster" of who is participating, the answer can be only given heuristically, providing a rough (and potentially unprecise) prediction.</p>
+                      <p>The approach we have used for the prediction of the computational power in Xeline relies on observing the so-called target value. The network has an internal target value (similar to Bitcoin's block target mechanism) which tries to scale the frequency of proof-of-work packages (solutions to work packages, that the miners occasionally find and get paid for) to around 10 per minute. The faster the network becomes, the more the target value scales down - making the cryptographical puzzles harder in order to tune into the correct proof-of-work frequency. We assume that, on the grand scheme, the target value scales proportionally with the amount of computational power in the network. We have performed a dry run on an iMac (Retina 5K, 27-inch, 2017) with a Core i5 3.8GHz CPU and, while mining on all cores, measured where the target value converges to in order to maintain 10 proof-of-work packages per second. This target value is assumed to reflect the machine's processing power of 57.5 MIPS. Using this as a baseline, we can now predict the momentarliy present  computational power in the network by proportionally scaling our ground truth to the current target value. Please note, that this value only reflects a rough estimation.</p>
+                    </div>
+                  </header>
+            </section>
+
+            <section id="help-miner-section" class="section js-section u-category-media">
+                <header class="section-header">
+                    <div class="section-wrapper">
+                      <h1>
+                        <i class="fa fa-info-circle"></i>
+                        More Information Regarding the Monitoring of the Miner
+                      </h1>
+                      <p>You cannot start the miner from within the Xeline UI, but Xeline will be aware of it when you start the miner on the same computer and will present you the speed at which the miner is operating in the GUI. The speed itself is given by flops/s, thich means "floating-point operation per second". The tasks on the XEL network are user-programmed: some of them may be hashes, some of them may be mathematical calculations, and others may be something entirely different. Hence, it would be wrong to, as it is practiced amongst other proof-of-work currencies, speak of "hashes per second". Instead, we measure the miner speed with floating-point operation per second . The miner, by the way, only performs work when there are actually tasks available and certain limits are not yet met for the current block; it may happen that the miner goes into a temporary idle mode and waits for the next block. In this case, the speed will drop to 0 e/s.</p>
+                    </div>
+                  </header>
+            </section>
+      </template>
