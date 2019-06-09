@@ -50,6 +50,6 @@ npm start
 
 ## 视频教程
 
-[视频](https://vimeo.com/265864522 ""){.vimeo}
+[视频](https://vimeo.com/265864522 "")
 
 [![Build Status](https://travis-ci.org/xel-software/xeline.svg?branch=master)](https://travis-ci.org/xel-software/xeline)
