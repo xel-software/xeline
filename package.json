@@ -16,9 +16,26 @@
   },
   "build": {
     "appId": "xel.org.xeline",
-    "linux": { "icon": "assets/app-icon/mac/app.icns", "target": [ "AppImage" ], "category": "Utility" },
-    "mac": { "icon": "assets/app-icon/mac/app.icns", "target": [ "dmg" ], "category": "Utility" },
-    "win": { "icon": "assets/app-icon/win/app.ico", "target": [ "portable" ] }
+    "linux": {
+      "icon": "assets/app-icon/mac/app.icns",
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    },
+    "mac": {
+      "icon": "assets/app-icon/mac/app.icns",
+      "target": [
+        "dmg"
+      ],
+      "category": "Utility"
+    },
+    "win": {
+      "icon": "assets/app-icon/win/app.ico",
+      "target": [
+        "portable"
+      ]
+    }
   },
   "repository": "https://github.com/xel-software/xeline",
   "keywords": [
