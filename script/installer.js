@@ -17,7 +17,7 @@ function getInstallerConfig () {
   const outPath = path.join(rootPath, 'out')
 
   return Promise.resolve({
-    appDirectory: path.join(outPath, 'Xeline-win32-ia32'),
+    appDirectory: path.join(outPath, 'Xeline-win32-x64'),
     exe: 'Xeline.exe',
     iconUrl: 'https://raw.githubusercontent.com/xel-software/xeline/master/assets/app-icon/win/app.ico',
     loadingGif: path.join(rootPath, 'assets', 'img', 'loading.gif'),

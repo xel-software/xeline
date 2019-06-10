@@ -74,7 +74,7 @@ function zipAssets () {
     path: path.join(outPath, 'Xeline-darwin-x64', 'Xeline.app')
   }, {
     name: 'xeline-windows.zip',
-    path: path.join(outPath, 'Xeline-win32-ia32')
+    path: path.join(outPath, 'Xeline-win32-x64')
   }, {
     name: 'xeline-linux.zip',
     path: path.join(outPath, 'Xeline-linux-x64')
