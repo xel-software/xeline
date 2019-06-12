@@ -1,28 +1,31 @@
-# xeline computation client
+# xeline 算力客户端
 [![Build Status](https://travis-ci.org/xel-software/xeline.svg?branch=master)](https://travis-ci.org/xel-software/xeline)
 
-xeline is a client to submit tasks to the xel computation network
+xeline是一个用于发布任务到xel算力网络的客户端
 
-Important : This is not a wallet, and should not be used as one ! Some key feature to manage xel coins are missing, if you need to manage your coins use the officials wallets (desktop or web)
+重要提示:这并不是一个钱包，请不要把它用作钱包！某些代币的管理功能，该客户端并不具备，如果你需要管理您的代币，
+请使用正式的官方钱包（桌面版或者网页钱包）
 
-## installation
+## 安装
 
-### binaries
+### 程序文件
+最快捷的方式是使用官方程序文件：
 Quickest way is to use the official binaries : https://github.com/xel-software/xeline/releases
 
-### from sources
+### 使用源码
+
 - install nodeJS (https://nodejs.org)
 - clone this repository
 - run `npm install` to setup dependencies
 - run `npm start` to launch the client
 
-## build
+## 创建
 - install yarn
 - run `yarn && yarn package:mac` to build a macOS client (only from a macOS host)
 - run `yarn && yarn package:linux` to build a linux client
 - run `yarn && yarn package:win` to build a windows client (only from a windows host)
 
-You can also build a release using docker :
+您也可以通过docker创建分发文件:
 ```
 docker run --rm -ti \
  --env-file <(env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
@@ -38,21 +41,21 @@ docker run --rm -ti \
 
 
 ----
-## Improve it
+## 改进xeline
 
-  - we love **pull requests**
-  - we love issues (resolved ones actually ;-) )
-  - in any case, make sure you leave **your ideas**
-  - assist others on the issue tracker
-  - **review** existing code and pull requests
-
-----
-## Troubleshooting (XEL Reference Software)
-
-  - UI Errors or Stacktraces?
-    - report on github
+  - 我们喜欢更多的推送/ pull requests
+  - 我们也喜欢更多的问题/issues(提出必解决;-) )
+  - 无论如何，都欢迎您提出任何的想法/ideas
+  - 欢迎解决和跟进其他人提出的问题/issuse
+  - 欢迎查看现有的代码和推送/pull requeset
 
 ----
-## Further Reading
+## 故障排除 (XEL相关的软件)
+
+  - UI 错误或者堆栈复写
+    -可以在github上提交
+
+----
+## 了解更多
 
   - on discord : https://link.xel.org/discord
