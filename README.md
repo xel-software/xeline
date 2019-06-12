@@ -12,7 +12,7 @@ xeline是一个用于发布任务到xel算力网络的客户端
 最快捷的方式是使用官方程序文件：
 Quickest way is to use the official binaries : https://github.com/xel-software/xeline/releases
 
-### 安装流程
+### 使用源码
 ## 准备
 - install nodeJS (https://nodejs.org)
 - clone this repository
