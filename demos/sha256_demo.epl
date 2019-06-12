@@ -1,5 +1,5 @@
 // metadata(title:Sha256 Demo)
-// metadata(pow_limit:1000)
+// metadata(pow_limit:100)
 // metadata(pow_price:0.2)
 // metadata(bounty_limit:1)
 // metadata(bounty_price:5)
