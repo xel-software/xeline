@@ -1,9 +1,18 @@
+// metadata(title:Sha256 Demo)
+// metadata(pow_limit:1000)
+// metadata(pow_price:0.2)
+// metadata(bounty_limit:1)
+// metadata(bounty_price:5)
+// metadata(iterations:1)
+// metadata(timeout:250)
+// metadata(sha256_demo_callback.js)
+
 /******************************************************************************
  *
  * SHA256 Example
  *
  * Name:	SHA256_BTC.epl
- * Desc:	Demo Of SHA256 Algo Using BTC 80 Byte Header and SHA256d 
+ * Desc:	Demo Of SHA256 Algorithm Using BTC 80 Byte Header and SHA256d
  *
  * Memory Map:
  *   Round Number:          m[ 10]
@@ -17,7 +26,7 @@
  *   a-h:                   u[500] - u[507]
  *
  *****************************************************************************/
- 
+
 array_uint 1000;
 
 // s0 := (w[i-15] rightrotate 7) xor (w[i-15] rightrotate 18) xor (w[i-15] rightshift 3)
@@ -27,7 +36,7 @@ function init_w {
 
 	// w[i-15]
 	u[400] = u[301 + u[99]];
-	
+
 	// w[i-2]
 	u[401] = u[314 + u[99]];
 
@@ -36,7 +45,7 @@ function init_w {
 
 	// s1
 	u[403] = ((u[401] >>> 17) ^ (u[401] >>> 19) ^ (u[401] >> 10));
-	
+
 	// w[i]
 	u[316 + u[99]] = u[300 + u[99]] + u[402] + u[309 + u[99]] + u[403];
 }
@@ -48,25 +57,25 @@ function init_w {
 // maj := (a and b) xor (a and c) xor (b and c)
 // temp2 := S0 + maj
 function compress {
-	
+
 	// S1
 	u[410] = ((u[504] >>> 6) ^ (u[504] >>> 11) ^ (u[504] >>> 25));
-	
+
 	// ch
 	u[411] = ((u[504] & u[505]) ^ (~u[504] & u[506]));
-	
+
 	// temp1
 	u[412] = u[507] + u[410] + u[411] + u[100 + u[99]] + u[300 + u[99]];
-	
+
 	// S0
 	u[413] = ((u[500] >>> 2) ^ (u[500] >>> 13) ^ (u[500] >>> 22));
-	
+
 	// maj
 	u[414] = ((u[500] & u[501]) ^ (u[500] & u[502]) ^ (u[501] & u[502]));
-	
+
 	// temp2
 	u[415] = u[413] + u[414];
-	
+
 	// Update a-h
 	u[507] = u[506];
 	u[506] = u[505];
@@ -79,12 +88,12 @@ function compress {
 }
 
 function sha256 {
-	
+
 	// Initialize w[16] - w[63] (Use u[99] As Counter)
 	repeat(u[99], 48, 48) {
 		init_w();
 	}
-	
+
 	// Initialize a - h
 	u[500] = u[200];	// a
 	u[501] = u[201];	// b
@@ -94,7 +103,7 @@ function sha256 {
 	u[505] = u[205];	// f
 	u[506] = u[206];	// g
 	u[507] = u[207];	// h
-	
+
 	// Compress Current Chunk
 	repeat(u[99], 64, 64) {
 		compress();
@@ -113,19 +122,19 @@ function sha256 {
 }
 
 function main {
-	
+
 	// In this example, the full SHA256d algo is needed to verify results.
 	// Also, because the algo is small / fast enough (less than WCET = TBD);
 	// the logic does not need to be broken into pieces and the complete logic
 	// will fit in the verify function.
 	// Therfore, the only logic needed in the main function is to call the
 	// verify function.
-	
+
 	verify();
 }
 
 function verify {
-	
+
 	init_K();
 
 	// Input Data To Be Hashed
@@ -161,7 +170,7 @@ function verify {
 	u[29] = 0x00000000;
 	u[30] = 0x00000000;
 	u[31] = 0x00000280;
-	
+
 	// Reset H Each Round
 	init_H();
 
@@ -182,7 +191,7 @@ function verify {
 	u[313] = u[13];
 	u[314] = u[14];
 	u[315] = u[15];
-	
+
 	// Hash First 512 Bit Chunk
 	sha256();
 
@@ -203,10 +212,10 @@ function verify {
 	u[313] = u[29];
 	u[314] = u[30];
 	u[315] = u[31];
-	
+
 	// Hash Second 512 Bit Chunk
 	sha256();
-	
+
 	// Store Hash1 (For Debugging Only)
 	u[40] = u[200];
 	u[41] = u[201];
@@ -219,7 +228,7 @@ function verify {
 
 	// Reset Hash
 	init_H();
-	
+
 	// Copy Hash1 & Padding Into w[0] - w[15]
 	u[300] = u[40];
 	u[301] = u[41];
@@ -240,7 +249,7 @@ function verify {
 
 	// Hash Hash1
 	sha256();
-	
+
 	// Store Hash2 (For Debugging Only)
 	u[50] = u[200];
 	u[51] = u[201];
@@ -250,11 +259,11 @@ function verify {
 	u[55] = u[205];
 	u[56] = u[206];
 	u[57] = u[207];
-	
+
 	// Bounty Is Rewarded When h7 Of Hash2 Is Zero
 	// For This Example h7 Equals Zero When u[19] = 0x1DAC2B7C;
 	verify_bty (u[57] == 0)
-	
+
 	// POW Is Rewarded When The MD5 Hash Of h7, h6, h5 & h4 Is Less Than Target
 	verify_pow (u[57], u[56], u[55], u[54])
 }
