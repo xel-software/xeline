@@ -72,7 +72,7 @@
     "electron-shortcut-normalizer": "^1.0.0",
     "electron-windows-store": "^2.1.0",
     "glob": "^7.1.3",
-    "highlight.js": "^9.13.1",
+    "highlight.js": "^10.1.2",
     "jquery": "^3.4.1",
     "long": "^4.0.0",
     "node-time-ago": "^1.0.0",
